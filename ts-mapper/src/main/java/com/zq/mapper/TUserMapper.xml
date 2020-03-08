@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zq.mapper.TUserMapper">
+  <resultMap id="BaseResultMap" type="com.zq.entity.TUser">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="CHAR" property="password" />
+    <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+    <result column="points" jdbcType="INTEGER" property="points" />
+    <result column="role" jdbcType="CHAR" property="role" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, password, is_delete, points, role, update_user, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zq.entity.TUser">
+    insert into t_user ( username, password )
+    values ( #{username,jdbcType=VARCHAR}, #{password,jdbcType=CHAR} )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zq.entity.TUser">
+    update t_user
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=CHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=CHAR},
+      </if>
+      <if test="points != null">
+        points = #{points,jdbcType=INTEGER},
+      </if>
+      <if test="role != null">
+        role = #{role,jdbcType=CHAR},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = now(),
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zq.entity.TUser">
+    update t_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=CHAR},
+      is_delete = #{isDelete,jdbcType=CHAR},
+      points = #{points,jdbcType=INTEGER},
+      role = #{role,jdbcType=CHAR},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!--根据用户名查询用户信息-->
+  <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where username = #{username}
+  </select>
+
+  <!--根据用户名查询出主键-->
+  <select id="selIdByUsername" parameterType="java.lang.String" resultType="java.lang.Long">
+    select id from t_user where username = #{username}
+  </select>
+
+  <!--批量插入用户账号-->
+  <insert id="batInsert">
+    insert into t_user ( username, password, update_user)
+    values
+    <foreach collection="numList" item="num" separator=",">
+      (#{num,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, #{userId} )
+    </foreach>
+  </insert>
+
+</mapper>

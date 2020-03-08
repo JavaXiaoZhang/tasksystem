@@ -1,0 +1,21 @@
+server:
+  port: 9091
+spring:
+  application:
+    name: register
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/tasksystem?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: Y0J8msqZ9Km+8/FemsymKF2E5bAOz6WL7mzjVztO6FTb7F5hzUHXlWd+PISOWVrGSS2IAsmD8SU/38GVvXh7EA==
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      initial-size: 10
+      max-active: 100
+      min-idle: 10
+      filter:
+        config:
+          enabled: true
+      connection-properties: config.decrypt=true;config.decrypt.key=${public-key}
+public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALuRN2sSGuBQnH1rXqEBsggGiQ5ht/WBig8lP6d9tMz1W00pWtp+bBSdWpAdP/evBrphtGCphlmobll6c4+PuacCAwEAAQ==

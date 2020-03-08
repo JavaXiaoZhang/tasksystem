@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base href="/"/>
+    <meta charset="UTF-8">
+    <title>批量注册</title>
+
+    <!--bootstrap.min.css-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+<div class="container">
+    <!-- Content here -->
+
+    <div class="alert alert-danger alert-dismissible show" role="alert" align="center" id="warn" hidden="true">
+        <strong><span id="msg"/></strong>
+    </div>
+    <div class="alert alert-success alert-dismissible show" role="alert" align="center" id="success" hidden="true">
+        <strong>添加成功！</strong>
+    </div>
+    <br>
+
+    <h2 align="center">批量注册</h2>
+
+    <br>
+
+    <form method="post" action="/register/bat">
+        <input id="userId" th:value="${userId}" hidden>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="start">账号范围</label>
+                <input type="text" class="form-control" id="start" name="start">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="end">&nbsp;</label>
+                <input type="text" class="form-control" id="end" name="end">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password">密码</label>
+            <input type="text" class="form-control" id="password" placeholder="password" name="password">
+        </div>
+        <button type="submit" class="btn btn-primary" id="submitBtn">批量注册</button>
+    </form>
+
+</div>
+
+<!--接受返回值-->
+<span id="result" th:text="${msg}" hidden="true"/>
+<!-- Include all js compiled plugins (below), or include individual files as needed -->
+
+<script src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<!--modernizr.min.js-->
+<script src="js/modernizr.min.js"></script>
+
+<!--bootstrap.min.js-->
+<script src="js/bootstrap.min.js"></script>
+
+<!-- bootsnav js -->
+<script src="js/bootsnav.js"></script>
+
+<!-- jquery.sticky.js -->
+<script src="js/jquery.sticky.js"></script>
+<script src="js/jquery.easing.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var msg = $("#result").text();
+        if ( msg != "" && msg != "ok"){
+            $("#success").prop("hidden", true);
+            $("#msg").text(msg);
+            $("#warn").removeAttr("hidden");
+            $('#warn').alert();
+            $("#result").text("");
+        }else if ( msg != "" ){
+            $("#warn").prop("hidden", true);
+            $("#success").removeAttr("hidden");
+            $("#success").alert();
+        }
+    })
+
+    $("#submitBtn").click(function () {
+        $("form").submit();
+    })
+</script>
+</body>
+</html>
