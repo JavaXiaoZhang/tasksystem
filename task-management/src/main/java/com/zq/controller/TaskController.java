@@ -40,7 +40,7 @@ public class TaskController {
         return null;
     }
 
-    @GetMapping("query/{userId}")
+    @GetMapping("queryTask/{userId}")
     public ResultBean queryTaskByUserId(@PathVariable("userId") Long userId){
 
         return null;

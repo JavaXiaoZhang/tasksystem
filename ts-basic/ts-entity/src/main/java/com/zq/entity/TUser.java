@@ -2,9 +2,6 @@ package com.zq.entity;
 
 import java.util.Date;
 
-/**
- * 用户类
- */
 public class TUser {
     private Long id;
 

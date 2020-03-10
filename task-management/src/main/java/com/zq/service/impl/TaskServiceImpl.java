@@ -2,7 +2,7 @@ package com.zq.service.impl;
 
 import com.zq.commons.base.BaseServiceImpl;
 import com.zq.commons.base.IBaseDao;
-import com.zq.entity.TTask;
+import TTask;
 import com.zq.mapper.TTaskMapper;
 import com.zq.service.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;

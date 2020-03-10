@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>任务管理系统主页</title>
-
-  <!--bootstrap.min.css-->
+     <!--bootstrap.min.css-->
     <link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
 <body>
@@ -62,169 +61,12 @@
     </div>
     <div class="row">
         <div class="col-md-1">
-            <a href="#" class="btn btn-block btn-link" type="button">任务看板</a>
-            <a href="#" class="btn btn-block btn-link" type="button">归档任务</a>
-            <a href="#" class="btn btn-block btn-link" type="button">回收站</a>
-            <a href="#" class="btn btn-block btn-link" type="button">数据报表</a>
+            <a th:href="task/queryTask/${userId}" id="taskBoard" class="btn btn-block btn-link" type="button">任务看板</a>
+            <a th:href="task/queryArchive/${userId}" id="archiveTask" class="btn btn-block btn-link" type="button">归档任务</a>
+            <a th:href="task/queryRecyclebin/${userId}" id="recycleBin" class="btn btn-block btn-link" type="button">回收站</a>
+            <a th:href="task/queryReport/${userId}" id="dataReport" class="btn btn-block btn-link" type="button">数据报表</a>
         </div>
-        <div class="col-md-8">
-            <span class="badge badge-default">个人任务</span>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="jumbotron">
-                        <a id="modal-405462" href="#modal-container-405462" role="button" class="btn" data-toggle="modal">创建任务板</a>
-
-                        <div class="modal fade" id="modal-container-405462" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="myModalLabel2">
-                                            Modal title
-                                        </h5>
-                                        <button type="button" class="close" data-dismiss="modal">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        ...
-                                    </div>
-                                    <div class="modal-footer">
-
-                                        <button type="button" class="btn btn-primary">
-                                            Save changes
-                                        </button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                            Close
-                                        </button>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="jumbotron">
-                        <h2>
-                            站立会
-                        </h2>
-                        <p>
-                            每天汇报任务
-                        </p>
-                        <p>
-                            <a class="btn btn-primary btn-large" href="#">任务详情</a>
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                </div>
-                <div class="col-md-3">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                </div>
-                <div class="col-md-6">
-                </div>
-                <div class="col-md-3">
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-1">
-                    <span class="badge badge-default">团队名</span>
-                </div>
-                <div class="col-md-1">
-                    <span class="badge badge-default">团队详情</span>
-                </div>
-                <div class="col-md-10">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="modal fade" id="modal-container-146791" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="myModalLabel3">
-                                        Modal title
-                                    </h5>
-                                    <button type="button" class="close" data-dismiss="modal">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    ...
-                                </div>
-                                <div class="modal-footer">
-
-                                    <button type="button" class="btn btn-primary">
-                                        Save changes
-                                    </button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="jumbotron">
-                        <a id="modal-146791" href="#modal-container-146791" role="button" class="btn" data-toggle="modal">创建任务板</a>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="jumbotron">
-                        <h2>
-                            站立会
-                        </h2>
-                        <p>
-                            每天汇报任务
-                        </p>
-                        <p>
-                            <a class="btn btn-primary btn-large" href="#">任务详情</a>
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                </div>
-                <div class="col-md-3">
-                </div>
-            </div>
-            <a id="modal-429553" href="#modal-container-429553" role="button" class="btn" data-toggle="modal">创建任务组</a>
-
-            <div class="modal fade" id="modal-container-429553" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="myModalLabel">
-                                Modal title
-                            </h5>
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            ...
-                        </div>
-                        <div class="modal-footer">
-
-                            <button type="button" class="btn btn-primary">
-                                Save changes
-                            </button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                Close
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
+        <div class="col-md-8" id="content">
 
         </div>
 
@@ -345,6 +187,27 @@
 
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#content").load($("#taskBoard").attr("href"));
+
+        $("#taskBoard").click(function () {
+            $("#content").load($("#taskBoard").attr("href"));
+        });
+
+        $("#archiveTask").click(function () {
+            $("#content").load($("#archiveTask").attr("href"));
+        });
+
+        $("#recycleBin").click(function () {
+            $("#content").load($("#recycleBin").attr("href"));
+        });
+
+        $("#dataReport").click(function () {
+            $("#content").load($("#dataReport").attr("href"));
+        });
+    })
+</script>
 </body>
 </html>
 
