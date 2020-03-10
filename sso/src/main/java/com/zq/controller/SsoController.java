@@ -49,7 +49,7 @@ public class SsoController {
             Object isAdmin = data.get("isAdmin");
             if (isAdmin!=null){
                 logger.info("管理员[{}]登录成功！",user.getUsername());
-                return "redirect:http://localhost:9091/admin.html";
+                return "redirect:http://localhost:9091/register/admin";
             }
 
             logger.info("用户[{}]登录成功！",user.getUsername());
