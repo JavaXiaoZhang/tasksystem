@@ -46,6 +46,24 @@ public class TaskController {
         return null;
     }
 
+    @GetMapping("queryArchive/{userId}")
+    public ResultBean queryArchiveByUserId(@PathVariable("userId") Long userId){
+
+        return null;
+    }
+
+    @GetMapping("queryRecyclebin/{userId}")
+    public ResultBean queryRecyclebinByUserId(@PathVariable("userId") Long userId){
+
+        return null;
+    }
+
+    @GetMapping("queryReport/{userId}")
+    public ResultBean queryReportByUserId(@PathVariable("userId") Long userId){
+
+        return null;
+    }
+
     @PostMapping("join/{userId}/{taskId}")
     public ResultBean joinTask(@PathVariable("userId")Long userId, @PathVariable("taskId") Long taskId){
 
