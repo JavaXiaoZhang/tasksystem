@@ -41,98 +41,82 @@
 
         </div>
     </div>
-    <div class="col-md-3">
+    <!--for 任务-->
+    <div th:each="${personalTask : personalTaskList}">
+        <div class="col-md-3">
         <div class="jumbotron">
-            <h2>
-                站立会
-            </h2>
+            <h2>${personalTask.name}</h2>
+            <p>${personalTask.description}</p>
             <p>
-                每天汇报任务
-            </p>
-            <p>
-                <a class="btn btn-primary btn-large" href="#">任务详情</a>
+                <a class="btn btn-primary btn-large" href="/task/query/${personalTask.id}">任务详情</a>
             </p>
         </div>
     </div>
-    <div class="col-md-3">
-    </div>
-    <div class="col-md-3">
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-3">
-    </div>
-    <div class="col-md-6">
-    </div>
-    <div class="col-md-3">
     </div>
 </div>
 <hr>
-<div class="row">
-    <div class="col-md-1">
-        <span class="badge badge-default">团队名</span>
+<!--for 任务组-->
+<div th:each="group : ${groupList}">
+    <div class="row">
+        <div class="col-md-1">
+            <span class="badge badge-default">${group.name}</span>
+        </div>
+        <div class="col-md-1">
+            <a th:href="/task/queryGroupInfoById/${group.id}" class="btn btn-block btn-link" type="button">团队详情</a>
+        </div>
+        <div class="col-md-10">
+        </div>
     </div>
-    <div class="col-md-1">
-        <span class="badge badge-default">团队详情</span>
-    </div>
-    <div class="col-md-10">
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-3">
-        <div class="modal fade" id="modal-container-146791" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="myModalLabel3">
-                            Modal title
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="jumbotron">
+                <a id="modal-146791" href="#modal-container-146791" role="button" class="btn" data-toggle="modal">创建任务板</a>
+            </div>
+            <div class="modal fade" id="modal-container-146791" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="myModalLabel3">
+                                Modal title
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
 
-                        <button type="button" class="btn btn-primary">
-                            Save changes
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            Close
-                        </button>
+                            <button type="button" class="btn btn-primary">
+                                Save changes
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
                     </div>
+
                 </div>
 
             </div>
-
         </div>
-
-        <div class="jumbotron">
-            <a id="modal-146791" href="#modal-container-146791" role="button" class="btn" data-toggle="modal">创建任务板</a>
+        <!--for 任务-->
+        <div th:each="task : ${group.taskList}">
+            <div class="col-md-3">
+            <div class="jumbotron">
+                <h2>${task.name}</h2>
+                <p>${task.description}</p>
+                <p>
+                    <a class="btn btn-primary btn-large" href="/task/query/${task.id}">任务详情</a>
+                </p>
+            </div>
         </div>
-    </div>
-    <div class="col-md-3">
-        <div class="jumbotron">
-            <h2>
-                站立会
-            </h2>
-            <p>
-                每天汇报任务
-            </p>
-            <p>
-                <a class="btn btn-primary btn-large" href="#">任务详情</a>
-            </p>
         </div>
-    </div>
-    <div class="col-md-3">
-    </div>
-    <div class="col-md-3">
     </div>
 </div>
+<!--创建后进入后台，返回前端刷新页面-->
 <a id="modal-429553" href="#modal-container-429553" role="button" class="btn" data-toggle="modal">创建任务组</a>
-
 <div class="modal fade" id="modal-container-429553" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -159,7 +143,6 @@
         </div>
 
     </div>
-
 </div>
 
 </body>
