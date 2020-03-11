@@ -41,10 +41,10 @@
         </div>
     </div>
     <!--动态加载任务-->
-    <div id="taskContent"/>
+    <div id="taskContent" th:value="/task/queryPersonalTaskByUserId/${userId}"/>
 </div>
 <hr>
-<div id="groupContent"/>
+<div id="groupContent" th:value="/task/queryGroupByUserId/${userId}"/>
 <!--创建后进入后台，返回前端刷新页面-->
 <a id="modal-429553" href="#modal-container-429553" role="button" class="btn" data-toggle="modal">创建任务组</a>
 <div class="modal fade" id="modal-container-429553" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -76,14 +76,14 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        $("#taskContent").load("/task/queryPersonalTaskByUserId/${userId}");
-        $("#groupContent").load("/task/queryGroupByUserId/${userId}")
+        $("#taskContent").load($("#taskContent").val());
+        $("#groupContent").load($("#groupContent").val());
         //添加个人任务后，持久化数据并局部刷新
         $("#personalBtn").click(function () {
             //TODO 发送表单请求到后台
 
             //重新加载
-            $("#taskContent").load("/task/queryPersonalTask/${userId}");
+            $("#taskContent").load($("#taskContent").val());
         })
 
         //添加任务组后，持久化数据并局部刷新
@@ -91,7 +91,7 @@
             //TODO 发送表单请求到后台
 
             //重新加载
-            $("#groupContent").load("/task/queryGroupByUserId/${userId}");
+            $("#groupContent").load($("#groupContent").val());
         })
     })
 </script>
