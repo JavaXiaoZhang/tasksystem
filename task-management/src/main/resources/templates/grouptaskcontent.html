@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--for 任务-->
+<div th:each="task : ${group.taskList}">
+    <div class="col-md-3">
+        <div class="jumbotron">
+            <h2>${task.name}</h2>
+            <p>${task.description}</p>
+            <p>
+                <a class="btn btn-primary btn-large" href="/task/query/${task.id}">任务详情</a>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

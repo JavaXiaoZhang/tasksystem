@@ -47,21 +47,23 @@ public class TaskController {
         return "taskinfo";
     }
 
-    @GetMapping("queryTask/{userId}")
-    public ResultBean queryTaskByUserId(@PathVariable("userId") Long userId){
+    @GetMapping("queryPersonalTaskByUserId/{userId}")
+    public String queryPersonalTaskByUserId(@PathVariable("userId") Long userId){
 
-        return null;
+        return "taskcontent";
     }
 
-    @GetMapping("queryGroupInfoById/{id}")
-    public String queryGroupInfoById(@PathVariable("id") Long groupId, ModelMap modelMap){
-        List<GroupInfo> list = taskService.queryGroupInfoById(groupId);
-        //TODO 查询出groupId下的taskList,并set到GroupInfo对象中
+    @GetMapping("queryGroupByUserId/{userId}")
+    public String queryGroupByUserId(@PathVariable("userId") Long userId, ModelMap modelMap){
+        List<GroupInfo> grouplist = taskService.queryGroupInfoById(groupId);
 
         //跳转到任务详情界面
-        modelMap.put("list",list);
-        return "groupinfo";
+        modelMap.put("grouplist", grouplist);
+        return "groupcontent";
     }
+
+    @GetMapping("queryTaskByGroupId/{groupId}")
+    public String queryTaskByGroupId()
 
     @PostMapping("join/{userId}/{taskId}")
     public ResultBean joinTask(@PathVariable("userId")Long userId, @PathVariable("taskId") Long taskId){

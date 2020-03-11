@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>嵌套个人任务看板</title>
+</head>
+<body>
+<!--for 任务-->
+<div th:each="${personalTask : personalTaskList}">
+    <div class="col-md-3">
+        <div class="jumbotron">
+            <h2>${personalTask.name}</h2>
+            <p>${personalTask.description}</p>
+            <p>
+                <a class="btn btn-primary btn-large" href="/task/query/${personalTask.id}">任务详情</a>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

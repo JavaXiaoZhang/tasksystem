@@ -61,10 +61,10 @@
     </div>
     <div class="row">
         <div class="col-md-1">
-            <a th:href="/task/queryTask/${userId}" id="taskBoard" class="btn btn-block btn-link" type="button">任务看板</a>
-            <a th:href="/task/queryArchive/${userId}" id="archiveTask" class="btn btn-block btn-link" type="button">归档任务</a>
-            <a th:href="/task/queryRecyclebin/${userId}" id="recycleBin" class="btn btn-block btn-link" type="button">回收站</a>
-            <a th:href="/task/queryReport/${userId}" id="dataReport" class="btn btn-block btn-link" type="button">数据报表</a>
+            <a href="querytask.html" id="taskBoard" class="btn btn-block btn-link btnLoad" type="button">任务看板</a>
+            <a th:href="/task/queryArchive/${userId}" id="archiveTask" class="btn btn-block btn-link btnLoad" type="button">归档任务</a>
+            <a th:href="/task/queryRecyclebin/${userId}" id="recycleBin" class="btn btn-block btn-link btnLoad" type="button">回收站</a>
+            <a th:href="/task/queryReport/${userId}" id="dataReport" class="btn btn-block btn-link btnLoad" type="button">数据报表</a>
         </div>
         <div class="col-md-8" id="content">
 
@@ -191,21 +191,10 @@
     $(function(){
         $("#content").load($("#taskBoard").attr("href"));
 
-        $("#taskBoard").click(function () {
-            $("#content").load($("#taskBoard").attr("href"));
+        $(".btnLoad").click(function () {
+            $("#content").load($(this).attr("href"));
         });
 
-        $("#archiveTask").click(function () {
-            $("#content").load($("#archiveTask").attr("href"));
-        });
-
-        $("#recycleBin").click(function () {
-            $("#content").load($("#recycleBin").attr("href"));
-        });
-
-        $("#dataReport").click(function () {
-            $("#content").load($("#dataReport").attr("href"));
-        });
     })
 </script>
 </body>
