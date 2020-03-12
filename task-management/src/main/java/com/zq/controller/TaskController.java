@@ -21,6 +21,8 @@ public class TaskController {
     @Autowired
     private ITaskService taskService;
 
+    //TODO taskInfoService  groupService
+
     /**
      * 添加任务
      * @param task
@@ -38,37 +40,89 @@ public class TaskController {
         return null;
     }
 
-    @GetMapping("query/{taskId}")
-    public String queryTaskInfoByTaskId(@PathVariable("taskId") Long taskId, ModelMap modelMap){
-        //查询出taskInfo的list
-        List<TaskInfo> list = taskService.queryTaskInfoByTaskId(taskId);
-        //跳转到任务详情界面
-        modelMap.put("list",list);
-        return "taskinfo";
-    }
-
+    /**
+     * 根据用户id查询用户的个人任务
+     * @param userId
+     * @return 跳转到个人任务展示界面
+     */
     @GetMapping("queryPersonalTaskByUserId/{userId}")
-    public String queryPersonalTaskByUserId(@PathVariable("userId") Long userId){
-
-        return "taskcontent";
+    public String queryPersonalTaskByUserId(@PathVariable("userId") Long userId, ModelMap modelMap){
+        List<TTask> personalTaskList = taskService.queryPersonalTaskByUserId(userId);
+        //跳转到个人任务展示界面
+        modelMap.put("personalTaskList",personalTaskList);
+        return "personaltaskcontent";
     }
 
+    /**
+     * 根据groupId查询组任务
+     * @param groupId
+     * @param modelMap
+     * @return
+     */
+    @GetMapping("queryGroupTaskById/{id}")
+    public String queryGroupTaskById(@PathVariable("id") Long groupId, ModelMap modelMap){
+        List<TTask> groupTaskList = taskService.queryGroupTaskById(groupId);
+        //跳转到组任务展示界面
+        modelMap.put("groupTaskList",groupTaskList);
+        return "grouptaskcontent";
+    }
+
+    /**
+     * 根据任务id查询个人任务详情
+     * @param taskId
+     * @param modelMap
+     * @return 跳转到任务详情界面
+     */
+    @GetMapping("queryPersonalTaskInfoById/{id}")
+    public String queryPersonalTaskInfoById(@PathVariable("id") Long taskId, ModelMap modelMap){
+        //查询出taskInfo的list
+        List<TaskInfo> personalTaskInfoList = taskInfoService.queryPersonalTaskInfoById(taskId);
+        //跳转到个人任务详情界面
+        modelMap.put("personalTaskInfoList",personalTaskInfoList);
+        return "personaltaskinfo";
+    }
+
+    /**
+     * 根据taskId查询组任务详情
+     * @param taskId
+     * @param modelMap
+     * @return
+     */
+    @GetMapping("queryGroupTaskInfoById/{id}")
+    public String queryGroupTaskInfoById(@PathVariable("id") Long taskId, ModelMap modelMap){
+        //查询出taskInfo的list
+        List<TaskInfo> groupTaskInfoList = taskInfoService.queryGroupTaskInfoById(taskId);
+        //跳转到组任务详情界面
+        modelMap.put("groupTaskInfoList",groupTaskInfoList);
+        return "grouptaskinfo";
+    }
+
+    /**
+     * 根据用户id查询对应group
+     * @param userId
+     * @param modelMap
+     * @return
+     */
     @GetMapping("queryGroupByUserId/{userId}")
     public String queryGroupByUserId(@PathVariable("userId") Long userId, ModelMap modelMap){
-        List<GroupInfo> grouplist = taskService.queryGroupInfoById(groupId);
-
-        //跳转到任务详情界面
-        modelMap.put("grouplist", grouplist);
+        List<Group> groupList = groupService.queryGroupByUserId(userId);
+        //跳转到group展示界面
+        modelMap.put("groupList", groupList);
         return "groupcontent";
     }
 
-    @GetMapping("queryTaskByGroupId/{groupId}")
-    public String queryTaskByGroupId()
-
-    @PostMapping("join/{userId}/{taskId}")
-    public ResultBean joinTask(@PathVariable("userId")Long userId, @PathVariable("taskId") Long taskId){
-
-        return null;
+    /**
+     * 根据groupId查询group详情
+     * @param groupId
+     * @param modelMap
+     * @return
+     */
+    @GetMapping("queryGroupInfoById/{id}")
+    public String queryGroupInfoById(@PathVariable("id") Long groupId, ModelMap modelMap){
+        List<GroupInfo> groupInfoList = groupService.queryGroupInfoById(groupId);
+        //跳转到group详情界面
+        modelMap.put("groupInfoList", groupInfoList);
+        return "groupinfo";
     }
 
 }

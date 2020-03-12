@@ -7,13 +7,13 @@
 </head>
 <body>
 <!--for 任务-->
-<div th:each="task : ${group.taskList}">
+<div th:each="task : ${groupTask.groupTaskList}">
     <div class="col-md-3">
         <div class="jumbotron">
-            <h2>${task.name}</h2>
-            <p>${task.description}</p>
+            <h2>${groupTask.name}</h2>
+            <p>${groupTask.description}</p>
             <p>
-                <a class="btn btn-primary btn-large" href="/task/query/${task.id}">任务详情</a>
+                <a class="btn btn-primary btn-large" href="/task/queryGroupTaskInfoById/${groupTask.id}">任务详情</a>
             </p>
         </div>
     </div>

@@ -8,6 +8,9 @@
         <module>register</module>
         <module>ts-mapper</module>
         <module>task-management</module>
+        <module>gateway</module>
+        <module>eureka</module>
+        <module>ts-basic</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
