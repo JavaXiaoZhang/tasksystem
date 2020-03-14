@@ -2,7 +2,7 @@ package com.zq.controller;
 
 import com.zq.commons.constant.ResultBeanConstant;
 import com.zq.commons.pojo.ResultBean;
-import com.zq.entity.TUser;
+import com.zq.entity.User;
 import com.zq.service.IRegisterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,17 +24,17 @@ public class RegisterController {
     private IRegisterService registerService;
 
     @PostMapping("register")
-    public String register(TUser user, ModelMap modelMap) {
+    public String register(User user, ModelMap modelMap) {
         //检查用户名是否存在
-        ResultBean resultBean = registerService.checkUsername(user.getUsername());
+        ResultBean resultBean = registerService.checkUsername(user.geUsername());
         //如果用户名不存在则插入用户数据
         if (!ResultBeanConstant.OK.equals(resultBean.getStatusCode())) {
-            registerService.insertUser(user);
+            registerService.inserUser(user);
             //注册成功跳转到登录界面
-            logger.info("用户[{}]注册成功！", user.getUsername());
+            logger.info("用户[{}]注册成功！", user.geUsername());
             return "redirect:http://localhost:9090";
         }
-        logger.error("用户[{}]注册失败！", user.getUsername());
+        logger.error("用户[{}]注册失败！", user.geUsername());
         modelMap.put("isFail", "true");
         return "index";
     }

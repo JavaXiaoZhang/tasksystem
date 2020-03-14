@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zq.mapper.TUserMapper">
-  <resultMap id="BaseResultMap" type="com.zq.entity.TUser">
+<mapper namespace="com.zq.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.zq.entity.User">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="CHAR" property="password" />
@@ -24,11 +24,11 @@
     delete from t_user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zq.entity.TUser">
+  <insert id="insert" parameterType="com.zq.entity.User">
     insert into t_user ( username, password )
     values ( #{username,jdbcType=VARCHAR}, #{password,jdbcType=CHAR} )
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zq.entity.TUser">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zq.entity.User">
     update t_user
     <set>
       <if test="username != null">
@@ -55,7 +55,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zq.entity.TUser">
+  <update id="updateByPrimaryKey" parameterType="com.zq.entity.User">
     update t_user
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=CHAR},

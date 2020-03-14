@@ -1,10 +1,10 @@
 package com.zq.mapper;
 
 import com.zq.commons.base.IBaseDao;
-import com.zq.entity.TTask;
+import com.zq.entity.Group;
 
 /**
  * @author ZQ
  */
-public interface TTaskMapper extends IBaseDao<TTask> {
+public interface GroupMapper extends IBaseDao<Group> {
 }

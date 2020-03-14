@@ -2,24 +2,19 @@ package com.zq.entity;
 
 import java.util.Date;
 
-public class TTask {
+/**
+ * @author ZQ
+ */
+public class TaskInfo {
     private Long id;
 
-    private String name;
-
-    private String type;
-
-    private Long masterId;
-
-    private String isOpen;
+    private Long taskId;
 
     private String isFinished;
 
     private Date deadTime;
 
     private Date finishTime;
-
-    private String grade;
 
     private String isDelete;
 
@@ -35,36 +30,12 @@ public class TTask {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
-
-    public Long getMasterId() {
-        return masterId;
-    }
-
-    public void setMasterId(Long masterId) {
-        this.masterId = masterId;
-    }
-
-    public String getIsOpen() {
-        return isOpen;
-    }
-
-    public void setIsOpen(String isOpen) {
-        this.isOpen = isOpen == null ? null : isOpen.trim();
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     public String getIsFinished() {
@@ -89,14 +60,6 @@ public class TTask {
 
     public void setFinishTime(Date finishTime) {
         this.finishTime = finishTime;
-    }
-
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade == null ? null : grade.trim();
     }
 
     public String getIsDelete() {

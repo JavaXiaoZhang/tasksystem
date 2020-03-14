@@ -1,7 +1,7 @@
 package com.zq.mapper;
 
 import com.zq.commons.base.IBaseDao;
-import com.zq.entity.TUser;
+import com.zq.entity.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -9,13 +9,13 @@ import java.util.List;
 /**
  * @author ZQ
  */
-public interface TUserMapper extends IBaseDao<TUser> {
+public interface UserMapper extends IBaseDao<User> {
     /**
-     * 根据用户名查询TUser
+     * 根据用户名查询User
      * @param username
-     * @return TUser对象
+     * @return User对象
      */
-    TUser selectByUsername(String username);
+    User selectByUsername(String username);
 
     /**
      * 根据用户名查询Id

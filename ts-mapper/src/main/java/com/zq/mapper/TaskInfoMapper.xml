@@ -1,61 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zq.mapper.TTaskMapper">
-  <resultMap id="BaseResultMap" type="com.zq.entity.TTask">
+<mapper namespace="com.zq.mapper.TaskInfoMapper">
+  <resultMap id="BaseResultMap" type="com.zq.entity.TaskInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="type" jdbcType="CHAR" property="type" />
-    <result column="master_id" jdbcType="BIGINT" property="masterId" />
-    <result column="is_open" jdbcType="CHAR" property="isOpen" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
     <result column="is_finished" jdbcType="CHAR" property="isFinished" />
     <result column="dead_time" jdbcType="TIMESTAMP" property="deadTime" />
     <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
-    <result column="grade" jdbcType="CHAR" property="grade" />
     <result column="is_delete" jdbcType="CHAR" property="isDelete" />
     <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, type, master_id, is_open, is_finished, dead_time, finish_time, grade, is_delete, 
-    update_user, update_time
+    id, task_id, is_finished, dead_time, finish_time, is_delete, update_user, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_task
+    from t_TaskInfo
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_task
+    delete from t_TaskInfo
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zq.entity.TTask">
-    insert into t_task (id, name, type, master_id, 
-      is_open, is_finished, dead_time, 
-      finish_time, grade, is_delete, 
+  <insert id="insert" parameterType="com.zq.entity.TaskInfo">
+    insert into t_TaskInfo (id, task_id, is_finished,
+      dead_time, finish_time, is_delete, 
       update_user, update_time)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=CHAR}, #{masterId,jdbcType=BIGINT}, 
-      #{isOpen,jdbcType=CHAR}, #{isFinished,jdbcType=CHAR}, #{deadTime,jdbcType=TIMESTAMP}, 
-      #{finishTime,jdbcType=TIMESTAMP}, #{grade,jdbcType=CHAR}, #{isDelete,jdbcType=CHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{taskId,jdbcType=BIGINT}, #{isFinished,jdbcType=CHAR}, 
+      #{deadTime,jdbcType=TIMESTAMP}, #{finishTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=CHAR}, 
       #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zq.entity.TTask">
-    insert into t_task
+  <insert id="insertSelective" parameterType="com.zq.entity.TaskInfo">
+    insert into t_TaskInfo
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="name != null">
-        name,
-      </if>
-      <if test="type != null">
-        type,
-      </if>
-      <if test="masterId != null">
-        master_id,
-      </if>
-      <if test="isOpen != null">
-        is_open,
+      <if test="taskId != null">
+        task_id,
       </if>
       <if test="isFinished != null">
         is_finished,
@@ -65,9 +49,6 @@
       </if>
       <if test="finishTime != null">
         finish_time,
-      </if>
-      <if test="grade != null">
-        grade,
       </if>
       <if test="isDelete != null">
         is_delete,
@@ -83,17 +64,8 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null">
-        #{type,jdbcType=CHAR},
-      </if>
-      <if test="masterId != null">
-        #{masterId,jdbcType=BIGINT},
-      </if>
-      <if test="isOpen != null">
-        #{isOpen,jdbcType=CHAR},
+      <if test="taskId != null">
+        #{taskId,jdbcType=BIGINT},
       </if>
       <if test="isFinished != null">
         #{isFinished,jdbcType=CHAR},
@@ -103,9 +75,6 @@
       </if>
       <if test="finishTime != null">
         #{finishTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="grade != null">
-        #{grade,jdbcType=CHAR},
       </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=CHAR},
@@ -118,20 +87,11 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zq.entity.TTask">
-    update t_task
+  <update id="updateByPrimaryKeySelective" parameterType="com.zq.entity.TaskInfo">
+    update t_TaskInfo
     <set>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null">
-        type = #{type,jdbcType=CHAR},
-      </if>
-      <if test="masterId != null">
-        master_id = #{masterId,jdbcType=BIGINT},
-      </if>
-      <if test="isOpen != null">
-        is_open = #{isOpen,jdbcType=CHAR},
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=BIGINT},
       </if>
       <if test="isFinished != null">
         is_finished = #{isFinished,jdbcType=CHAR},
@@ -141,9 +101,6 @@
       </if>
       <if test="finishTime != null">
         finish_time = #{finishTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="grade != null">
-        grade = #{grade,jdbcType=CHAR},
       </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=CHAR},
@@ -157,16 +114,12 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zq.entity.TTask">
-    update t_task
-    set name = #{name,jdbcType=VARCHAR},
-      type = #{type,jdbcType=CHAR},
-      master_id = #{masterId,jdbcType=BIGINT},
-      is_open = #{isOpen,jdbcType=CHAR},
+  <update id="updateByPrimaryKey" parameterType="com.zq.entity.TaskInfo">
+    update t_TaskInfo
+    set task_id = #{taskId,jdbcType=BIGINT},
       is_finished = #{isFinished,jdbcType=CHAR},
       dead_time = #{deadTime,jdbcType=TIMESTAMP},
       finish_time = #{finishTime,jdbcType=TIMESTAMP},
-      grade = #{grade,jdbcType=CHAR},
       is_delete = #{isDelete,jdbcType=CHAR},
       update_user = #{updateUser,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP}

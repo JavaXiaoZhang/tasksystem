@@ -1,7 +1,7 @@
 package com.zq.controller;
 
 import com.zq.commons.pojo.ResultBean;
-import com.zq.entity.TTask;
+import com.zq.entity.Task;
 import com.zq.service.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ public class TaskController {
     @Autowired
     private ITaskService taskService;
 
-    //TODO taskInfoService  groupService
+    //TODO TaskInfoService  groupService
 
     /**
      * 添加任务
@@ -29,13 +29,13 @@ public class TaskController {
      * @return
      */
     @PostMapping("add")
-    public ResultBean addTask(TTask task){
+    public ResultBean addTask(Task task){
 
         return null;
     }
 
     @PostMapping("modify")
-    public ResultBean modifyTask(TTask task){
+    public ResultBean modifyTask(Task task){
 
         return null;
     }
@@ -47,7 +47,7 @@ public class TaskController {
      */
     @GetMapping("queryPersonalTaskByUserId/{userId}")
     public String queryPersonalTaskByUserId(@PathVariable("userId") Long userId, ModelMap modelMap){
-        List<TTask> personalTaskList = taskService.queryPersonalTaskByUserId(userId);
+        List<Task> personalTaskList = taskService.queryPersonalTaskByUserId(userId);
         //跳转到个人任务展示界面
         modelMap.put("personalTaskList",personalTaskList);
         return "personaltaskcontent";
@@ -61,7 +61,7 @@ public class TaskController {
      */
     @GetMapping("queryGroupTaskById/{id}")
     public String queryGroupTaskById(@PathVariable("id") Long groupId, ModelMap modelMap){
-        List<TTask> groupTaskList = taskService.queryGroupTaskById(groupId);
+        List<Task> groupTaskList = taskService.queryGroupTaskById(groupId);
         //跳转到组任务展示界面
         modelMap.put("groupTaskList",groupTaskList);
         return "grouptaskcontent";
@@ -75,11 +75,11 @@ public class TaskController {
      */
     @GetMapping("queryPersonalTaskInfoById/{id}")
     public String queryPersonalTaskInfoById(@PathVariable("id") Long taskId, ModelMap modelMap){
-        //查询出taskInfo的list
-        List<TaskInfo> personalTaskInfoList = taskInfoService.queryPersonalTaskInfoById(taskId);
+        //查询出TaskInfo的list
+        List<TaskInfo> personalTaskInfoList = TaskInfoService.queryPersonalTaskInfoById(taskId);
         //跳转到个人任务详情界面
         modelMap.put("personalTaskInfoList",personalTaskInfoList);
-        return "personaltaskinfo";
+        return "personalTaskInfo";
     }
 
     /**
@@ -90,11 +90,11 @@ public class TaskController {
      */
     @GetMapping("queryGroupTaskInfoById/{id}")
     public String queryGroupTaskInfoById(@PathVariable("id") Long taskId, ModelMap modelMap){
-        //查询出taskInfo的list
-        List<TaskInfo> groupTaskInfoList = taskInfoService.queryGroupTaskInfoById(taskId);
+        //查询出TaskInfo的list
+        List<TaskInfo> groupTaskInfoList = TaskInfoService.queryGroupTaskInfoById(taskId);
         //跳转到组任务详情界面
         modelMap.put("groupTaskInfoList",groupTaskInfoList);
-        return "grouptaskinfo";
+        return "groupTaskInfo";
     }
 
     /**

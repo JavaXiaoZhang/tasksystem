@@ -2,18 +2,15 @@ package com.zq.entity;
 
 import java.util.Date;
 
-public class TUser {
+/**
+ * @author ZQ
+ */
+public class Group {
     private Long id;
 
-    private String username;
-
-    private String password;
+    private String name;
 
     private String isDelete;
-
-    private Integer points;
-
-    private String role;
 
     private Long updateUser;
 
@@ -27,20 +24,12 @@ public class TUser {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username == null ? null : username.trim();
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password == null ? null : password.trim();
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
     }
 
     public String getIsDelete() {
@@ -49,22 +38,6 @@ public class TUser {
 
     public void setIsDelete(String isDelete) {
         this.isDelete = isDelete == null ? null : isDelete.trim();
-    }
-
-    public Integer getPoints() {
-        return points;
-    }
-
-    public void setPoints(Integer points) {
-        this.points = points;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role == null ? null : role.trim();
     }
 
     public Long getUpdateUser() {

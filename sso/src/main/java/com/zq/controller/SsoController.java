@@ -2,7 +2,7 @@ package com.zq.controller;
 
 import com.zq.commons.constant.ResultBeanConstant;
 import com.zq.commons.pojo.ResultBean;
-import com.zq.entity.TUser;
+import com.zq.entity.User;
 import com.zq.service.ISsoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class SsoController {
     private ISsoService ssoService;
 
     @PostMapping("checkLogin")
-    public String checkLogin(TUser user , HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
+    public String checkLogin(User user , HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
         ResultBean resultBean = ssoService.checkLogin(user);
         //用户登录成功
         if (ResultBeanConstant.OK.equals(resultBean.getStatusCode())){
@@ -48,15 +48,15 @@ public class SsoController {
             // 登录成功，跳转到主页
             Object isAdmin = data.get("isAdmin");
             if (isAdmin!=null){
-                logger.info("管理员[{}]登录成功！",user.getUsername());
+                logger.info("管理员[{}]登录成功！",user.geUsername());
                 return "redirect:http://localhost:9091/register/admin";
             }
 
-            logger.info("用户[{}]登录成功！",user.getUsername());
+            logger.info("用户[{}]登录成功！",user.geUsername());
             return "redirect:http://localhost:9092";
         }
         //登录失败，跳转到登录界面
-        logger.error("用户[{}]登录失败！",user.getUsername());
+        logger.error("用户[{}]登录失败！",user.geUsername());
         modelMap.put("isFail","true");
         return "index";
     }

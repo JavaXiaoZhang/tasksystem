@@ -4,8 +4,8 @@ import com.zq.commons.base.BaseServiceImpl;
 import com.zq.commons.base.IBaseDao;
 import com.zq.commons.constant.ResultBeanConstant;
 import com.zq.commons.pojo.ResultBean;
-import com.zq.entity.TUser;
-import com.zq.mapper.TUserMapper;
+import com.zq.entity.User;
+import com.zq.mapper.UserMapper;
 import com.zq.service.IRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,9 +18,9 @@ import java.util.List;
  * @author ZQ
  */
 @Service
-public class RegisterServiceImpl extends BaseServiceImpl<TUser> implements IRegisterService {
+public class RegisterServiceImpl extends BaseServiceImpl<User> implements IRegisterService {
     @Autowired
-    private TUserMapper userMapper;
+    private UserMapper userMapper;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -35,7 +35,7 @@ public class RegisterServiceImpl extends BaseServiceImpl<TUser> implements IRegi
     }
 
     @Override
-    public void insertUser(TUser user) {
+    public void inserUser(User user) {
         //密码加密
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         insert(user);
@@ -64,7 +64,7 @@ public class RegisterServiceImpl extends BaseServiceImpl<TUser> implements IRegi
     }
 
     @Override
-    public IBaseDao<TUser> getBaseDao() {
+    public IBaseDao<User> getBaseDao() {
         return userMapper;
     }
 }

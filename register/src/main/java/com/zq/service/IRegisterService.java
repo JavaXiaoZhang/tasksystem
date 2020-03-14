@@ -2,12 +2,12 @@ package com.zq.service;
 
 import com.zq.commons.base.IBaseService;
 import com.zq.commons.pojo.ResultBean;
-import com.zq.entity.TUser;
+import com.zq.entity.User;
 
 /**
  * @author ZQ
  */
-public interface IRegisterService extends IBaseService<TUser> {
+public interface IRegisterService extends IBaseService<User> {
     /**
      * 检查用户名是否存在
      * @param username
@@ -19,7 +19,7 @@ public interface IRegisterService extends IBaseService<TUser> {
      * 插入用户信息
      * @param user
      */
-    void insertUser(TUser user);
+    void inserUser(User user);
 
     /**
      * 批量添加账号

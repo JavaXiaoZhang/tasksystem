@@ -76,7 +76,34 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        $("#taskContent").load($("#taskContent").val());
+
+        let box = document.getElementById('box');
+        let arr = [];//渲染数组，
+        xuanran(arr);
+        function xuanran(arr) {
+            let html = arr.map(item => {
+                return `
+                    <div th:each="${personalTask || personalTaskList}" class="content">
+                        <div class="col-md-3">
+                            <div class="jumbotron">
+                                <h2>${personalTask.name}</h2>
+                                <p>${personalTask.desc}</p>
+                                <p>
+                                    <a class="btn btn-primary btn-large" href="/task/queryPersonalTaskInfoById/${personalTask.id}">任务详情</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }).join('');
+            box.innerHTML = html;
+        }
+        //添加后
+        arr.push("对象");
+        xuanran(arr);
+
+
+        /*$("#taskContent").load($("#taskContent").val());
         $("#groupContent").load($("#groupContent").val());
         //添加个人任务后，持久化数据并局部刷新
         $("#personalBtn").click(function () {
@@ -92,7 +119,7 @@
 
             //重新加载
             $("#groupContent").load($("#groupContent").val());
-        })
+        })*/
     })
 </script>
 </body>

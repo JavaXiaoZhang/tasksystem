@@ -4,8 +4,8 @@ import com.zq.commons.base.BaseServiceImpl;
 import com.zq.commons.base.IBaseDao;
 import com.zq.commons.constant.ResultBeanConstant;
 import com.zq.commons.pojo.ResultBean;
-import com.zq.entity.TUser;
-import com.zq.mapper.TUserMapper;
+import com.zq.entity.User;
+import com.zq.mapper.UserMapper;
 import com.zq.service.ISsoService;
 import com.zq.util.JwtUtils;
 import io.jsonwebtoken.Claims;
@@ -22,31 +22,31 @@ import java.util.Map;
  * @author ZQ
  */
 @Service
-public class SsoServiceImpl extends BaseServiceImpl<TUser> implements ISsoService {
+public class SsoServiceImpl extends BaseServiceImpl<User> implements ISsoService {
 
     private Logger logger = LoggerFactory.getLogger(SsoServiceImpl.class);
 
     @Autowired
-    private TUserMapper userMapper;
+    private UserMapper userMapper;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public ResultBean checkLogin(TUser user) {
-        TUser currentUser = userMapper.selectByUsername(user.getUsername());
-        if (currentUser != null && passwordEncoder.matches(user.getPassword(), currentUser.getPassword())) {
+    public ResultBean checkLogin(User user) {
+        User currenUser = userMapper.selectByUsername(user.geUsername());
+        if (currenUser != null && passwordEncoder.matches(user.getPassword(), currenUser.getPassword())) {
             JwtUtils jwtUtils = new JwtUtils();
             //key不能太简单，否则报错
             jwtUtils.setSecretKey("zhang");
             jwtUtils.setTtl(30 * 60 * 1000);
 
-            String jwtToken = jwtUtils.createJwtToken(currentUser.getId().toString(), currentUser.getUsername());
+            String jwtToken = jwtUtils.createJwtToken(currenUser.getId().toString(), currenUser.geUsername());
 
             Map<String, Object> map = new HashMap<>(3);
-            map.put("userId", currentUser.getId());
+            map.put("userId", currenUser.getId());
             map.put("jwtToken", jwtToken);
-            if ("0".equals(currentUser.getRole())){
+            if ("0".equals(currenUser.getRole())){
                 map.put("isAdmin",true);
             }
             //map.put(user.g)
@@ -69,7 +69,7 @@ public class SsoServiceImpl extends BaseServiceImpl<TUser> implements ISsoServic
     }
 
     @Override
-    public IBaseDao<TUser> getBaseDao() {
+    public IBaseDao<User> getBaseDao() {
         return userMapper;
     }
 }
