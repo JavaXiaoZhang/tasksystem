@@ -26,15 +26,15 @@ public class RegisterController {
     @PostMapping("register")
     public String register(User user, ModelMap modelMap) {
         //检查用户名是否存在
-        ResultBean resultBean = registerService.checkUsername(user.geUsername());
+        ResultBean resultBean = registerService.checkUsername(user.getUsername());
         //如果用户名不存在则插入用户数据
         if (!ResultBeanConstant.OK.equals(resultBean.getStatusCode())) {
             registerService.inserUser(user);
             //注册成功跳转到登录界面
-            logger.info("用户[{}]注册成功！", user.geUsername());
+            logger.info("用户[{}]注册成功！", user.getUsername());
             return "redirect:http://localhost:9090";
         }
-        logger.error("用户[{}]注册失败！", user.geUsername());
+        logger.error("用户[{}]注册失败！", user.getUsername());
         modelMap.put("isFail", "true");
         return "index";
     }
@@ -50,8 +50,10 @@ public class RegisterController {
         return "admin";
     }
 
-    @GetMapping("admin")
-    public String admin() {
+    @GetMapping("admin/{userId}")
+    public String admin(@PathVariable("userId") Long userId, ModelMap modelMap) {
+        modelMap.put("userId",userId);
+        System.out.println("userId:"+userId);
         return "admin";
     }
 }

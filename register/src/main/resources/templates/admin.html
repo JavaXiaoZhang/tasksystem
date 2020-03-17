@@ -38,15 +38,15 @@
     <br>
 
     <form method="post" action="/register/bat">
-        <input id="userId" th:value="${userId}" hidden>
+        <input name="userId" th:value="${userId}" hidden>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="start">账号范围</label>
-                <input type="text" class="form-control" id="start" name="start">
+                <input type="text" class="form-control" placeholder="start" id="start" name="start">
             </div>
             <div class="form-group col-md-6">
                 <label for="end">&nbsp;</label>
-                <input type="text" class="form-control" id="end" name="end">
+                <input type="text" class="form-control" placeholder="end" id="end" name="end">
             </div>
         </div>
         <div class="form-group">

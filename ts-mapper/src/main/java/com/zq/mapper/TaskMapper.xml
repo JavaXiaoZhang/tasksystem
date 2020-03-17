@@ -6,12 +6,13 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="desc" jdbcType="VARCHAR" property="desc" />
     <result column="type" jdbcType="CHAR" property="type" />
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
     <result column="is_delete" jdbcType="CHAR" property="isDelete" />
     <result column="update_user" jdbcType="BIGINT" property="updateUser" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, desc, type, is_delete, update_user, update_time
+    id, `name`, `desc`, type, group_id,is_delete, update_user, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -114,4 +115,21 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryPersonalTaskByUserId" resultMap="BaseResultMap">
+    select t.* from t_task t join t_user_task u on t.id=u.task_id where t.type='0' and u.user_id=#{userId} and t.is_delete = '0'
+  </select>
+  <update id="deleteTask">
+    update t_task set is_delete = '1', update_user = #{userId}, update_time = now() where id=#{taskId}
+  </update>
+  <insert id="insertPTaskWithReturn" useGeneratedKeys="true" keyProperty="id">
+    insert into t_task (`name`, `desc`, type, update_user)
+    values (#{name}, #{desc}, #{type}, #{updateUser})
+  </insert>
+  <insert id="insertRelation">
+    insert into t_user_task (user_id, task_id) values (#{userId},#{taskId})
+  </insert>
+  <select id="queryGroupTaskByGroupId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from t_task where group_id = #{id}  and type='1' and is_delete='0'
+  </select>
 </mapper>

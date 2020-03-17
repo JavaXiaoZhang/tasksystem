@@ -15,11 +15,21 @@ public class Task {
 
     private String type;
 
+    private Long groupId;
+
     private String isDelete;
 
     private Long updateUser;
 
     private Date updateTime;
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
 
     public Long getId() {
         return id;

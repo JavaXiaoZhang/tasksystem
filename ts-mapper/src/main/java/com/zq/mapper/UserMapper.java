@@ -32,4 +32,11 @@ public interface UserMapper extends IBaseDao<User> {
      * @return
      */
     Integer batInsert(@Param("numList") List<String> list, @Param("password") String password, @Param("userId") Long userId);
+
+    /**
+     * 根据groupId查询组内用户
+     * @param groupId
+     * @return
+     */
+    List<User> queryUserByGroupId(Long groupId);
 }

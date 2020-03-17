@@ -1,35 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-</head>、
-<body>
 <span class="badge badge-default">个人任务</span>
-<div class="row">
+<div class="row" id="taskContent" name="/task/queryPersonalTaskByUserId/">
     <div class="col-md-3">
         <div class="jumbotron">
             <a id="modal-405462" href="#modal-container-405462" role="button" class="btn" data-toggle="modal">创建任务板</a>
-            <div class="modal fade" id="modal-container-405462" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal" id="modal-container-405462" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="myModalLabel2">
-                                Modal title
+                            <h5 class="modal-title">
+                                创建任务看板
                             </h5>
                             <button type="button" class="close" data-dismiss="modal">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            ...
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">名称</span>
+                                </div>
+                                <!-- id="basic-url"-->
+                                <input type="text" class="form-control"  aria-describedby="basic-addon" id="pName">
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">描述</span>
+                            </div>
+                                <textarea class="form-control" aria-label="With textarea" id="pDesc"></textarea>
+                            </div>
                         </div>
                         <div class="modal-footer">
-
-                            <button type="button" class="btn btn-primary">
-                                Save changes
+                            <button type="button" class="btn btn-primary" id="personalBtn" data-dismiss="modal">
+                                提交
                             </button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="personalBtn">
-                                Close
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                取消
                             </button>
                         </div>
                     </div>
@@ -37,37 +42,39 @@
                 </div>
 
             </div>
-
         </div>
     </div>
     <!--动态加载任务-->
-    <div id="taskContent" th:value="/task/queryPersonalTaskByUserId/${userId}"/>
 </div>
 <hr>
-<div id="groupContent" th:value="/task/queryGroupByUserId/${userId}"/>
+<div id="groupContent" name="/task/queryGroupByUserId/"/>
 <!--创建后进入后台，返回前端刷新页面-->
 <a id="modal-429553" href="#modal-container-429553" role="button" class="btn" data-toggle="modal">创建任务组</a>
-<div class="modal fade" id="modal-container-429553" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal" id="modal-container-429553" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">
-                    Modal title
+                    创建任务组
                 </h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
-                ...
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">名称</span>
+                    </div>
+                    <input type="text" class="form-control" aria-describedby="basic-addon1" id="gName">
+                </div>
             </div>
             <div class="modal-footer">
-
-                <button type="button" class="btn btn-primary">
-                    Save changes
+                <button type="button" class="btn btn-primary" id="gBtn" data-dismiss="modal">
+                    提交
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="groupBtn">
-                    Close
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    取消
                 </button>
             </div>
         </div>
@@ -76,51 +83,163 @@
 </div>
 <script type="text/javascript">
     $(function () {
-
-        let box = document.getElementById('box');
-        let arr = [];//渲染数组，
-        xuanran(arr);
-        function xuanran(arr) {
+        //加载个人任务
+        let taskContent = document.getElementById('taskContent');
+        $.get($("#taskContent").attr("name")+userId,function (data) {
+            xuanranP(data);
+        });
+        function xuanranP(arr) {
             let html = arr.map(item => {
                 return `
-                    <div th:each="${personalTask || personalTaskList}" class="content">
-                        <div class="col-md-3">
+                     <div class="col-md-3">
                             <div class="jumbotron">
-                                <h2>${personalTask.name}</h2>
-                                <p>${personalTask.desc}</p>
+                            <!--删除框-->
+                                <!--<div class="jumbotron-header dropdown">
+                                  <a class="btn btn-danger dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  </a>
+                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="btn btn-danger" href="/task/deleteTask/"+userId+"/${item.id}">删除</a>
+                                  </div>
+                                </div>-->
+                                <h2>${item.name}</h2>
+                                <p>${item.desc}</p>
                                 <p>
-                                    <a class="btn btn-primary btn-large" href="/task/queryPersonalTaskInfoById/${personalTask.id}">任务详情</a>
+                                    <a class="btn btn-primary btn-large" href="/task/queryPersonalTaskInfoById/${item.id}">任务详情</a>
                                 </p>
                             </div>
-                        </div>
-                    </div>
+                      </div>
                 `
             }).join('');
-            box.innerHTML = html;
+            taskContent.innerHTML+=html;
         }
         //添加后
-        arr.push("对象");
-        xuanran(arr);
+        $("#content").on('click','#personalBtn',function () {
+            let pName = $("#pName").val();
+            let pDesc = $("#pDesc").val();
+            let obj = new Object();
+            obj.name=pName;
+            obj.desc=pDesc;
+            $.ajax({
+                url: '/task/insertPTaskWithReturn/'+pName+"/"+pDesc+"/"+userId,
+                method: 'POST',
+                async: false,
+                success: function (data) {
+                    obj.id = data;
+                }
+            });
+            let newArr = [];
+            newArr.push(obj);
+            xuanranP(newArr);
+            $("body").removeClass('modal-open');
+        });
 
+        //加载group和团队任务
+        let groupContent = document.getElementById('groupContent');
+        let groupArr = [];
+        $.get($("#groupContent").attr("name")+userId,function (data) {
+            xuanranG(data);
+            groupArr = data;
+        });
+        function xuanranG(arr) {
+            let html = arr.map(item => {
+                let groupTask;
+                return `
+                        <div class="row">
+                            <div class="col-md-1">
+                                <span class="badge badge-default">${item.name}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="/task/queryGroupInfoById/${item.id}" class="btn btn-block btn-link" type="button">团队详情</a>
+                            </div>
+                            <div class="col-md-9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="jumbotron">
+                                    <a id="modal-146791" href="#modal-container-146791" role="button" class="btn" data-toggle="modal">创建任务板</a>
+                                </div>
+                                <div class="modal" id="modal-container-146791" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="myModalLabel3">
+                                                    创建任务板
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon">名称</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon">
+                                                </div>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">描述</span>
+                                                    </div>
+                                                    <textarea class="form-control" aria-label="With textarea" id="pDesc"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary groupcontentBtn" id="gTBtn" data-dismiss="modal">
+                                                    提交
+                                                </button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    取消
+                                                </button>
+                                            </div>
+                                        </div>
 
-        /*$("#taskContent").load($("#taskContent").val());
-        $("#groupContent").load($("#groupContent").val());
-        //添加个人任务后，持久化数据并局部刷新
-        $("#personalBtn").click(function () {
-            //TODO 发送表单请求到后台
+                                    </div>
 
-            //重新加载
-            $("#taskContent").load($("#taskContent").val());
-        })
+                                </div>
+                            </div>
 
-        //添加任务组后，持久化数据并局部刷新
-        $("#groupBtn").click(function () {
-            //TODO 发送表单请求到后台
+                            <div each="groupTask || ${item.taskList}">
+                                <div class="col-md-3">
+                                    <div class="jumbotron">
+                                        <!--删除框-->
+                                         <!--<div class="jumbotron-header dropdown" hidden="${item.isAdmin='1'?true:false}">
+                                          <a class="btn btn-danger dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-            //重新加载
-            $("#groupContent").load($("#groupContent").val());
-        })*/
+                                          </a>
+                                          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a class="btn btn-danger" href="/task/deleteTask/"+userId+"/${groupTask.id}">删除</a>
+                                          </div>
+                                        </div>-->
+                                        <h2>${groupTask.name}</h2>
+                                        <p>${groupTask.desc}</p>
+                                        <p>
+                                            <a class="btn btn-primary btn-large" href="/task/queryGroupTaskInfoById/${groupTask.id}">任务详情</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                `
+            }).join('');
+            groupContent.innerHTML = html;
+        };
+        //添加后
+        $("#content").on('click','#gBtn',function () {
+            let gName = $("#gName").val();
+            let obj = new Object();
+            obj.name=gName;
+            $.ajax({
+                url: '/task/insertGroupWithReturn/'+gName+"/"+userId,
+                method: 'POST',
+                async: false,
+                success: function (data) {
+                    obj.id = data;
+                }
+            });
+            groupArr.push(obj);
+            xuanranG(groupArr);
+            $("body").removeClass('modal-open');
+        });
     })
 </script>
-</body>
-</html>

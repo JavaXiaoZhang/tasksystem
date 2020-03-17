@@ -33,7 +33,6 @@ public class SsoController {
         ResultBean resultBean = ssoService.checkLogin(user);
         //用户登录成功
         if (ResultBeanConstant.OK.equals(resultBean.getStatusCode())){
-            System.out.println("ok");
             //在token中加入IP地址，防止token被劫持
             Map<String,Object> data = (Map<String, Object>) resultBean.getData();
             String jwtToken = request.getRemoteAddr() + data.get("jwtToken");
@@ -42,21 +41,19 @@ public class SsoController {
             cookie.setDomain("com.zq");
             cookie.setHttpOnly(true);
             response.addCookie(cookie);
-
-            //携带userId到主页
-            modelMap.put("userId", data.get("userId"));
+            Long userId = (Long) data.get("userId");
             // 登录成功，跳转到主页
             Object isAdmin = data.get("isAdmin");
             if (isAdmin!=null){
-                logger.info("管理员[{}]登录成功！",user.geUsername());
-                return "redirect:http://localhost:9091/register/admin";
+                logger.info("管理员[{}]登录成功！",user.getUsername());
+                return "redirect:http://localhost:9091/register/admin/"+userId;
             }
-
-            logger.info("用户[{}]登录成功！",user.geUsername());
-            return "redirect:http://localhost:9092";
+            logger.info("用户[{}]登录成功！",user.getUsername());
+            //携带userId到主页
+            return "redirect:http://localhost:9092/task/index/"+userId;
         }
         //登录失败，跳转到登录界面
-        logger.error("用户[{}]登录失败！",user.geUsername());
+        logger.error("用户[{}]登录失败！",user.getUsername());
         modelMap.put("isFail","true");
         return "index";
     }

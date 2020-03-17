@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.zq.entity.Group">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="is_admin" jdbcType="CHAR" property="isAdmin" />
     <result column="is_delete" jdbcType="CHAR" property="isDelete" />
     <result column="update_user" jdbcType="BIGINT" property="updateUser" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -90,4 +91,15 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryGroupByUserId" resultMap="BaseResultMap">
+    select g.*,ug.is_admin from t_user u join t_user_group ug on u.id = ug.user_id
+            join t_group g on ug.group_id = g.id where g.is_delete='0'
+  </select>
+  <insert id="insertGroupWithReturn" useGeneratedKeys="true" keyProperty="id">
+    insert into t_group (`name`, update_user) values (#{name}, #{updateUser})
+  </insert>
+  <insert id="insertRelation">
+    insert into t_user_group (user_id,group_id,is_admin,update_user) values (#{userId},#{groupId},'1',#{userId})
+  </insert>
 </mapper>

@@ -4,7 +4,7 @@
 <head>
     <base href="/" />
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>任务管理系统主页</title>
      <!--bootstrap.min.css-->
@@ -61,15 +61,16 @@
     </div>
     <div class="row">
         <div class="col-md-1">
-            <a href="querytask.html" id="taskBoard" class="btn btn-block btn-link btnLoad" type="button">任务看板</a>
-            <a th:href="/task/queryArchive/${userId}" id="archiveTask" class="btn btn-block btn-link btnLoad" type="button">归档任务</a>
-            <a th:href="/task/queryRecyclebin/${userId}" id="recycleBin" class="btn btn-block btn-link btnLoad" type="button">回收站</a>
-            <a th:href="/task/queryReport/${userId}" id="dataReport" class="btn btn-block btn-link btnLoad" type="button">数据报表</a>
+            <a href="/task/querytask.html" id="taskBoard" class="btn btn-block btn-link btnLoad" type="button">任务看板</a>
+            <a th:href="@{/task/queryArchive/{userId}(userId=${userId})}" class="btn btn-block btn-link btnLoad" type="button">归档任务</a>
+            <!--/task/queryRecyclebin/${userId}-->
+            <a href="#" id="recycleBin" class="btn btn-block btn-link btnLoad" type="button">回收站</a>
+            <!--/task/queryReport/${userId}-->
+            <a href="#" id="dataReport" class="btn btn-block btn-link btnLoad" type="button">数据报表</a>
         </div>
         <div class="col-md-8" id="content">
 
         </div>
-
         <div class="col-md-3">
             <br>
             <div class="carousel slide" id="carousel-614407">
@@ -184,18 +185,22 @@
         </div>
     </div>
 </div>
-
+<input hidden="hidden" id="userId" th:value="${userId}">
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/popper.min.js"></script>
 <script type="text/javascript">
+    const userId = $('#userId').val();
     $(function(){
         //初始化加载任务看板
         $("#content").load($("#taskBoard").attr("href"));
-
+        /*$.getScript("js/my.js",function () {
+            alert('载入成功！')
+        })*/
         $(".btnLoad").click(function () {
             $("#content").load($(this).attr("href"));
+            return false;
         });
-
     })
 </script>
 </body>
