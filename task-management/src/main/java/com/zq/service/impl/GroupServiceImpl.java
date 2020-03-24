@@ -88,7 +88,12 @@ public class GroupServiceImpl extends BaseServiceImpl<Group> implements IGroupSe
 
     @Override
     public void addGroupUser(Long groupId, String username, Long updateUser) {
-        groupMapper.addGroupUser(groupId, username, updateUser);
+        Long id = groupMapper.selectGroupByUsername(groupId, username);
+        if (id != null){
+            groupMapper.updateGroupUser(id);
+        }else{
+            groupMapper.addGroupUser(groupId, username, updateUser);
+        }
     }
 
     @Override

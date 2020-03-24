@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,14 +37,9 @@ public class TaskController {
         return "index";
     }
 
-    @GetMapping("querytask.html")
-    public String queryTask(){
-        return "querytask";
-    }
-
-    @GetMapping("report.html")
-    public String report(){
-        return "report";
+    @GetMapping("url/{url}")
+    public String url(@PathVariable String url){
+        return url;
     }
 
     /**
@@ -53,7 +49,7 @@ public class TaskController {
      * @param userId
      * @return
      */
-    @PostMapping("insertPersonalTaskWithReturn/{name}/{desc}/{userId}/{groupId}")
+    @PostMapping("insertPersonalTaskWithReturn/{name}/{desc}/{userId}")
     @ResponseBody
     public Long insertPersonalTaskWithReturn(@PathVariable("name") String name, @PathVariable("desc") String desc,
                                      @PathVariable("userId") Long userId){
@@ -78,12 +74,6 @@ public class TaskController {
     @ResponseBody
     public Task queryGroupTask(@PathVariable Long userId, @PathVariable Long groupId){
         return taskService.queryGroupTask(userId,groupId);
-    }
-
-    @PostMapping("modify")
-    public ResultBean modifyTask(Task task){
-
-        return null;
     }
 
     @PutMapping("modifyGroupName/{groupId}/{groupName}/{userId}")
@@ -122,14 +112,36 @@ public class TaskController {
      * @param modelMap
      * @return 跳转到任务详情界面
      */
-    @GetMapping("queryTaskInfoById/{taskId}/{userId}")
-    public String queryTaskInfoById(@PathVariable("taskId") Long taskId, @PathVariable String userId, ModelMap modelMap){
+    @GetMapping("queryTaskInfoById/{taskId}/{isAdmin}/{userId}")
+    public String queryTaskInfoById(@PathVariable("taskId") Long taskId, @PathVariable String isAdmin,
+                                    @PathVariable String userId, ModelMap modelMap){
         //查询出TaskInfo的list
         List<TaskInfo> taskInfoList = taskInfoService.queryTaskInfoById(taskId);
+        //添加userList属性，分类list
+        List<TaskInfo> todoList = new ArrayList<>();
+        List<TaskInfo> doingList = new ArrayList<>();
+        List<TaskInfo> doneList = new ArrayList<>();
+        List<TaskInfo> fileList = new ArrayList<>();
+        for (TaskInfo taskInfo: taskInfoList) {
+            if ("Todo".equals(taskInfo.getStatus())){
+                todoList.add(taskInfo);
+            }else if ("Doing".equals(taskInfo.getStatus())){
+                doingList.add(taskInfo);
+            }else if ("Done".equals(taskInfo.getStatus())){
+                doneList.add(taskInfo);
+            }else if ("File".equals(taskInfo.getStatus())){
+                fileList.add(taskInfo);
+            }
+        }
         //跳转到个人任务详情界面
-        modelMap.put("taskInfoList",taskInfoList);
         modelMap.put("userId",userId);
         modelMap.put("taskId",taskId);
+        modelMap.put("isAdmin",isAdmin);
+        modelMap.put("todoList",todoList);
+        modelMap.put("doingList",doingList);
+        modelMap.put("doneList",doneList);
+        modelMap.put("fileList",fileList);
+
         return "taskinfo";
     }
 
@@ -180,5 +192,11 @@ public class TaskController {
     @ResponseBody
     public void delUserById(@PathVariable Long groupId, @PathVariable Long userId, @PathVariable Long updateUser){
         groupService.delUserById(groupId, userId, updateUser);
+    }
+
+    @PostMapping("addTaskInfo")
+    public String addTaskInfo(TaskInfo taskInfo){
+        taskInfoService.insertSelective(taskInfo);
+        return "redirect:/task/queryTaskInfoById/"+taskInfo.getTaskId()+"/"+taskInfo.getIsAdmin()+"/"+taskInfo.getUpdateUser();
     }
 }

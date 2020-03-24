@@ -59,4 +59,18 @@ public interface GroupMapper extends IBaseDao<Group> {
      * @param updateUser
      */
     void delUserById(Long groupId, Long userId, Long updateUser);
+
+    /**
+     * 检查用户名是否存在
+     * @param groupId
+     * @param username
+     * @return
+     */
+    Long selectGroupByUsername(Long groupId, String username);
+
+    /**
+     * 修改成员属性
+     * @param id
+     */
+    void updateGroupUser(Long id);
 }

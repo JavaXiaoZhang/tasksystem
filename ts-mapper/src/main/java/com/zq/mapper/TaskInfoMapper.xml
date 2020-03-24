@@ -4,15 +4,17 @@
   <resultMap id="BaseResultMap" type="com.zq.entity.TaskInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="status" jdbcType="CHAR" property="status" />
     <result column="is_finished" jdbcType="CHAR" property="isFinished" />
     <result column="dead_time" jdbcType="TIMESTAMP" property="deadTime" />
-    <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
     <result column="is_delete" jdbcType="CHAR" property="isDelete" />
     <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, task_id, is_finished, dead_time, finish_time, is_delete, update_user, update_time
+    id, task_id, `name`, `desc`, status, is_finished, dead_time, is_delete, update_user, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -41,23 +43,23 @@
       <if test="taskId != null">
         task_id,
       </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="desc != null">
+        `desc`,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
       <if test="isFinished != null">
         is_finished,
       </if>
       <if test="deadTime != null">
         dead_time,
       </if>
-      <if test="finishTime != null">
-        finish_time,
-      </if>
-      <if test="isDelete != null">
-        is_delete,
-      </if>
       <if test="updateUser != null">
         update_user,
-      </if>
-      <if test="updateTime != null">
-        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -67,23 +69,23 @@
       <if test="taskId != null">
         #{taskId,jdbcType=BIGINT},
       </if>
+      <if test="name != null">
+        #{name},
+      </if>
+      <if test="desc != null">
+        #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
       <if test="isFinished != null">
         #{isFinished,jdbcType=CHAR},
       </if>
       <if test="deadTime != null">
         #{deadTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="finishTime != null">
-        #{finishTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isDelete != null">
-        #{isDelete,jdbcType=CHAR},
-      </if>
       <if test="updateUser != null">
         #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -129,6 +131,6 @@
   <select id="queryTaskInfoById" resultMap="BaseResultMap">
     select ti.*
     from t_taskinfo ti join t_task t on ti.task_id=t.id
-    where t.id = #{taskId} and t.type = '0' and ti.is_delete = '0'
+    where t.id = #{taskId} and t.type = '0' and ti.is_delete = '0' and t.is_delete='0'
   </select>
 </mapper>

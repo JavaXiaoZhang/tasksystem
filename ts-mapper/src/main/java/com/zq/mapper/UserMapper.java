@@ -39,4 +39,11 @@ public interface UserMapper extends IBaseDao<User> {
      * @return
      */
     List<User> queryUserByGroupId(Long groupId);
+
+    /**
+     * 根据taskInfoId查询userList
+     * @param taskInfoId
+     * @return
+     */
+    List<User> queryUserListByTaskId(Long taskInfoId);
 }

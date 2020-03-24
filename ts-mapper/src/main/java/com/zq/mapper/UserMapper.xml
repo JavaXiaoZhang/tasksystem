@@ -94,4 +94,8 @@
         select u.id, u.username,ug.is_admin from t_user u join t_user_group ug on u.id = ug.user_id
             where ug.group_id= #{groupId} and u.is_delete='0' and ug.is_delete='0'
   </select>
+  <select id="queryUserListByTaskId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select u.id, u.username from t_user u join t_user_taskinfo uk on u.id = uk.user_id
+            where uk.taskinfo_id= #{taskId} and u.is_delete='0' and uk.is_delete='0'
+  </select>
 </mapper>

@@ -117,4 +117,10 @@
     set is_delete='1', update_user = #{updateUser}, update_time = now()
         where user_id = #{userId} and group_id=#{groupId};
   </update>
+  <select id="selectGroupByUsername" resultType="java.lang.Long">
+    select id from t_user_group where user_id = (SELECT id from t_user where username=#{username} and is_delete='0') and group_id = #{groupId}
+  </select>
+  <update id="updateGroupUser" parameterType="java.lang.Long">
+    update t_user_group set is_delete='0' where id = #{id}
+  </update>
 </mapper>

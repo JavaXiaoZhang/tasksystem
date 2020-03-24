@@ -39,7 +39,7 @@ logging:
   #设置全局的输入级别，root代表全局
   level:
     root: info
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:9080/eureka/
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:9080/eureka/

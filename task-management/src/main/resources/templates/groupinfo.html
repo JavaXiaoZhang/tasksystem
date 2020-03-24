@@ -51,7 +51,7 @@
         <h3>
             团队成员
         </h3>
-        <a id="modal-300833" href="#modal-container-300833" role="button" class="btn" data-toggle="modal" th:hidden="${group.isAdmin=='0'?true:false}">新增成员</a>
+        <button data-target="#modal-container-300833" role="button" class="btn btn-primary" data-toggle="modal" th:hidden="${group.isAdmin=='0'?true:false}">新增成员</button>
         <div class="modal" id="modal-container-300833" role="dialog" aria-labelledby="myModalLabel"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
