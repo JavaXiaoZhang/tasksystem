@@ -1,17 +1,23 @@
 package com.zq.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author ZQ
  */
-public class Group {
+public class Group implements Serializable {
+
+    private static final long serialVersionUID = -1L;
+
     private Long id;
 
     private String name;
 
     private List<Task> taskList;
+
+    private List<User> userList;
 
     private String isDelete;
 
@@ -20,6 +26,14 @@ public class Group {
     private Date updateTime;
 
     private String isAdmin;
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
 
     public String getIsAdmin() {
         return isAdmin;

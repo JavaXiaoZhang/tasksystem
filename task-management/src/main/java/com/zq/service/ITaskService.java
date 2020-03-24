@@ -27,13 +27,10 @@ public interface ITaskService extends IBaseService<Task> {
     /**
      * 新增个人任务并返回主键
      *
-     * @param name
-     * @param desc
-     * @param userId
-     * @param type
+     * @param task
      * @return
      */
-    Long insertPTaskWithReturn(String name, String desc, String type, Long userId);
+    Long insertTaskWithReturn(Task task);
 
     /**
      * 根据组id查询团队任务
@@ -41,4 +38,12 @@ public interface ITaskService extends IBaseService<Task> {
      * @return
      */
     List<Task> queryGroupTaskByGroupId(Long id);
+
+    /**
+     * 从concurrentHashMap中获取GroupTask对象
+     * @param userId
+     * @param groupId
+     * @return
+     */
+    Task queryGroupTask(Long userId, Long groupId);
 }

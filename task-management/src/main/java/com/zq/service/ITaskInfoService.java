@@ -11,16 +11,9 @@ import java.util.List;
  */
 public interface ITaskInfoService extends IBaseService<TaskInfo> {
     /**
-     * 根据taskId查询个人任务详情
+     * 根据taskId查询任务详情
      * @param taskId
      * @return
      */
-    List<TaskInfo> queryPersonalTaskInfoById(Long taskId);
-
-    /**
-     * 根据taskId查询组任务详情
-     * @param taskId
-     * @return
-     */
-    List<TaskInfo> queryGroupTaskInfoById(Long taskId);
+    List<TaskInfo> queryTaskInfoById(Long taskId);
 }

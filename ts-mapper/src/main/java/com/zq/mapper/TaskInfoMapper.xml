@@ -126,7 +126,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="queryPersonalTaskInfoById" resultMap="BaseResultMap">
+  <select id="queryTaskInfoById" resultMap="BaseResultMap">
     select ti.*
     from t_taskinfo ti join t_task t on ti.task_id=t.id
     where t.id = #{taskId} and t.type = '0' and ti.is_delete = '0'

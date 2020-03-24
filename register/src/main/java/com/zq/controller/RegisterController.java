@@ -29,7 +29,7 @@ public class RegisterController {
         ResultBean resultBean = registerService.checkUsername(user.getUsername());
         //如果用户名不存在则插入用户数据
         if (!ResultBeanConstant.OK.equals(resultBean.getStatusCode())) {
-            registerService.inserUser(user);
+            registerService.insertUser(user);
             //注册成功跳转到登录界面
             logger.info("用户[{}]注册成功！", user.getUsername());
             return "redirect:http://localhost:9090";

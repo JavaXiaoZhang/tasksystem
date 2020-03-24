@@ -10,6 +10,7 @@
     <result column="role" jdbcType="CHAR" property="role" />
     <result column="update_user" jdbcType="BIGINT" property="updateUser" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_admin" jdbcType="CHAR" property="isAdmin" />
   </resultMap>
   <sql id="Base_Column_List">
     id, username, password, is_delete, points, role, update_user, update_time
@@ -89,7 +90,8 @@
     </foreach>
   </insert>
 
-  <select id="queryUserByGroupId" resultMap="BaseResultMap">
-        /*isAdmin*/
+  <select id="queryUserByGroupId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select u.id, u.username,ug.is_admin from t_user u join t_user_group ug on u.id = ug.user_id
+            where ug.group_id= #{groupId} and u.is_delete='0' and ug.is_delete='0'
   </select>
 </mapper>

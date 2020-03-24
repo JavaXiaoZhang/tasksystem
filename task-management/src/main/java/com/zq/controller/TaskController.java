@@ -4,7 +4,6 @@ import com.zq.commons.pojo.ResultBean;
 import com.zq.entity.Group;
 import com.zq.entity.Task;
 import com.zq.entity.TaskInfo;
-import com.zq.entity.User;
 import com.zq.service.IGroupService;
 import com.zq.service.ITaskInfoService;
 import com.zq.service.ITaskService;
@@ -22,7 +21,6 @@ import java.util.List;
 @Controller
 @RequestMapping("task")
 public class TaskController {
-
     @Autowired
     private ITaskService taskService;
 
@@ -31,8 +29,6 @@ public class TaskController {
 
     @Autowired
     private IGroupService groupService;
-
-    //TODO 注入userService
 
     @GetMapping("index/{userId}")
     public String index(@PathVariable("userId") Long userId, ModelMap modelMap){
@@ -45,6 +41,10 @@ public class TaskController {
         return "querytask";
     }
 
+    @GetMapping("report.html")
+    public String report(){
+        return "report";
+    }
 
     /**
      * 添加任务
@@ -53,17 +53,31 @@ public class TaskController {
      * @param userId
      * @return
      */
-    @PostMapping("insertPTaskWithReturn/{name}/{desc}/{type}/{userId}")
+    @PostMapping("insertPersonalTaskWithReturn/{name}/{desc}/{userId}/{groupId}")
     @ResponseBody
-    public Long insertPTaskWithReturn(@PathVariable("name") String name, @PathVariable("desc") String desc,
-                                      @PathVariable("type") String type, @PathVariable("userId") Long userId){
-        return taskService.insertPTaskWithReturn(name, desc, type, userId);
+    public Long insertPersonalTaskWithReturn(@PathVariable("name") String name, @PathVariable("desc") String desc,
+                                     @PathVariable("userId") Long userId){
+        return taskService.insertTaskWithReturn(new Task(null,name,desc,"0",-1L,"",userId,null));
+    }
+
+    @PostMapping("insertGroupTaskWithReturn")
+    @ResponseBody
+    public void insertGroupTaskWithReturn(Task task){
+        if (task.getName()!=null && !("").equals(task.getName().trim())) {
+            taskService.insertTaskWithReturn(task);
+        }
     }
 
     @PostMapping("insertGroupWithReturn/{name}/{userId}")
     @ResponseBody
     public Long insertGroupWithReturn(@PathVariable("name") String name, @PathVariable("userId") Long userId){
-        return groupService.insertGroupWithReturn(name,userId);
+        return groupService.insertGroupWithReturn(name, userId);
+    }
+
+    @GetMapping("queryGroupTask/{userId}/{groupId}")
+    @ResponseBody
+    public Task queryGroupTask(@PathVariable Long userId, @PathVariable Long groupId){
+        return taskService.queryGroupTask(userId,groupId);
     }
 
     @PostMapping("modify")
@@ -72,10 +86,22 @@ public class TaskController {
         return null;
     }
 
-    @DeleteMapping("delPersonalTask/{userId}/{taskId}")
+    @PutMapping("modifyGroupName/{groupId}/{groupName}/{userId}")
+    @ResponseBody
+    public void modifyGroupName(@PathVariable Long groupId, @PathVariable String groupName, @PathVariable Long userId){
+        groupService.modifyGroupName(groupId, groupName, userId);
+    }
+
+    @GetMapping("delTask/{taskId}/{userId}")
     public String deleteTask(@PathVariable("userId") Long userId, @PathVariable("taskId") Long taskId){
         taskService.deleteTask(userId, taskId);
-        return "redirect:task/queryPersonalTaskByUserId/"+userId;
+        return "redirect:/task/index/"+userId;
+    }
+
+    @PutMapping("delGroup/{groupId}/{userId}")
+    @ResponseBody
+    public void delGroup(@PathVariable("userId") Long userId, @PathVariable("groupId") Long groupId){
+        groupService.deleteGroup(userId, groupId);
     }
 
     /**
@@ -86,53 +112,25 @@ public class TaskController {
     @GetMapping("queryPersonalTaskByUserId/{userId}")
     @ResponseBody
     public List<Task> queryPersonalTaskByUserId(@PathVariable("userId") Long userId){
-        List<Task> personalTaskList = taskService.queryPersonalTaskByUserId(userId);
-        //返回list
-        return personalTaskList;
+        return taskService.queryPersonalTaskByUserId(userId);
     }
 
     /**
-     * 根据groupId查询组任务
-     * @param groupId
-     * @param modelMap
-     * @return
-     */
-    /*@GetMapping("queryGroupTaskById/{groupId}")
-    public String queryGroupTaskById(@PathVariable("groupId") Long groupId, ModelMap modelMap){
-        List<Task> groupTaskList = taskService.queryGroupTaskById(groupId);
-        //跳转到组任务展示界面
-        modelMap.put("groupTaskList",groupTaskList);
-        return "grouptaskcontent";
-    }*/
-
-    /**
-     * 根据任务id查询个人任务详情
+     * 根据任务id查询任务详情
      * @param taskId
+     * @param userId
      * @param modelMap
      * @return 跳转到任务详情界面
      */
-    @GetMapping("queryPersonalTaskInfoById/{taskId}")
-    public String queryPersonalTaskInfoById(@PathVariable("taskId") Long taskId, ModelMap modelMap){
+    @GetMapping("queryTaskInfoById/{taskId}/{userId}")
+    public String queryTaskInfoById(@PathVariable("taskId") Long taskId, @PathVariable String userId, ModelMap modelMap){
         //查询出TaskInfo的list
-        List<TaskInfo> personalTaskInfoList = taskInfoService.queryPersonalTaskInfoById(taskId);
+        List<TaskInfo> taskInfoList = taskInfoService.queryTaskInfoById(taskId);
         //跳转到个人任务详情界面
-        modelMap.put("personalTaskInfoList",personalTaskInfoList);
-        return "personalTaskInfo";
-    }
-
-    /**
-     * 根据taskId查询组任务详情
-     * @param taskId
-     * @param modelMap
-     * @return
-     */
-    @GetMapping("queryGroupTaskInfoById/{taskId}")
-    public String queryGroupTaskInfoById(@PathVariable("taskId") Long taskId, ModelMap modelMap){
-        //查询出TaskInfo的list
-        List<TaskInfo> groupTaskInfoList = taskInfoService.queryGroupTaskInfoById(taskId);
-        //跳转到组任务详情界面
-        modelMap.put("groupTaskInfoList",groupTaskInfoList);
-        return "groupTaskInfo";
+        modelMap.put("taskInfoList",taskInfoList);
+        modelMap.put("userId",userId);
+        modelMap.put("taskId",taskId);
+        return "taskinfo";
     }
 
     /**
@@ -157,12 +155,30 @@ public class TaskController {
      * @param modelMap
      * @return
      */
-    /*@GetMapping("queryGroupInfoById/{groupId}")
-    public String queryGroupInfoById(@PathVariable("groupId") Long groupId, ModelMap modelMap){
-        List<User> userList = userService.queryUserByGroupId(groupId);
+    @GetMapping("queryGroupInfoByGroupId/{groupId}/{userId}")
+    public String queryGroupInfoById(@PathVariable("groupId") Long groupId, @PathVariable Long userId, ModelMap modelMap){
+        Group group = groupService.queryGroupInfoByGroupId(groupId,userId);
         //跳转到group详情界面
-        modelMap.put("userList", userList);
+        modelMap.put("group", group);
+        modelMap.put("userId",userId);
         return "groupinfo";
-    }*/
+    }
 
+    @PostMapping("addGroupUser/{groupId}/{username}/{updateUser}")
+    @ResponseBody
+    public void addGroupUser(@PathVariable Long groupId, @PathVariable String username, @PathVariable Long updateUser){
+        groupService.addGroupUser(groupId,username,updateUser);
+    }
+
+    @PutMapping("modifyIsAdmin/{groupId}/{userId}/{updateUser}")
+    @ResponseBody
+    public void modifyIsAdmin(@PathVariable Long groupId, @PathVariable Long userId, @PathVariable Long updateUser){
+        groupService.modifyIsAdmin(groupId, userId, updateUser);
+    }
+
+    @PutMapping("delUserById/{groupId}/{userId}/{updateUser}")
+    @ResponseBody
+    public void delUserById(@PathVariable Long groupId, @PathVariable Long userId, @PathVariable Long updateUser){
+        groupService.delUserById(groupId, userId, updateUser);
+    }
 }

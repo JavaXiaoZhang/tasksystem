@@ -30,6 +30,7 @@ public class SsoController {
 
     @PostMapping("checkLogin")
     public String checkLogin(User user , HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
+        System.out.println("=========");
         ResultBean resultBean = ssoService.checkLogin(user);
         //用户登录成功
         if (ResultBeanConstant.OK.equals(resultBean.getStatusCode())){
@@ -60,11 +61,11 @@ public class SsoController {
 
     @GetMapping("checkIsLogin")
     @ResponseBody
-    @CrossOrigin(origins = "*",allowCredentials = "true")
-    public ResultBean checkIsLogin(@CookieValue(name = "user_token",required = false) String jwtToken, HttpServletRequest request){
+    //@CrossOrigin(origins = "*",allowCredentials = "true")
+    //@CookieValue(name = "user_token",required = false)
+    public ResultBean checkIsLogin( String jwtToken, String addr){
         if (jwtToken!=null){
             //先比较IP地址是否相同
-            String addr = request.getRemoteAddr();
             if (addr.equals(jwtToken.substring(0,addr.length()))){
                 //再解析jwtToken
                 return ssoService.checkIsLogin(jwtToken.substring(addr.length()));

@@ -1,12 +1,16 @@
 package com.zq.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author ZQ
  */
-public class Task {
+public class Task implements Serializable {
+
+    private static final long serialVersionUID = 5077670175092807127L;
+
     private Long id;
 
     private String name;
@@ -85,5 +89,33 @@ public class Task {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Task() {
+    }
+
+    public Task(Long id, String name, String desc, String type, Long groupId, String isDelete, Long updateUser, Date updateTime) {
+        this.id = id;
+        this.name = name;
+        this.desc = desc;
+        this.type = type;
+        this.groupId = groupId;
+        this.isDelete = isDelete;
+        this.updateUser = updateUser;
+        this.updateTime = updateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", desc='" + desc + '\'' +
+                ", type='" + type + '\'' +
+                ", groupId=" + groupId +
+                ", isDelete='" + isDelete + '\'' +
+                ", updateUser=" + updateUser +
+                ", updateTime=" + updateTime +
+                '}';
     }
 }

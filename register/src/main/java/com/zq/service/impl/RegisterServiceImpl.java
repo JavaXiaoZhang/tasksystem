@@ -16,9 +16,11 @@ import java.util.List;
 
 /**
  * @author ZQ
+ * @Date 2020/3/19
  */
 @Service
 public class RegisterServiceImpl extends BaseServiceImpl<User> implements IRegisterService {
+
     @Autowired
     private UserMapper userMapper;
 
@@ -35,7 +37,7 @@ public class RegisterServiceImpl extends BaseServiceImpl<User> implements IRegis
     }
 
     @Override
-    public void inserUser(User user) {
+    public void insertUser(User user) {
         //密码加密
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         insert(user);

@@ -11,6 +11,7 @@
         <module>gateway</module>
         <module>eureka</module>
         <module>ts-basic</module>
+        <module>quiz</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

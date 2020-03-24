@@ -26,12 +26,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
     }
 
     @Override
-    public List<TaskInfo> queryPersonalTaskInfoById(Long taskId) {
-        return taskInfoMapper.queryPersonalTaskInfoById(taskId);
-    }
-
-    @Override
-    public List<TaskInfo> queryGroupTaskInfoById(Long taskId) {
-        return null;
+    public List<TaskInfo> queryTaskInfoById(Long taskId) {
+        return taskInfoMapper.queryTaskInfoById(taskId);
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author ZQ
@@ -19,6 +21,8 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements ITaskServi
 
     @Autowired
     private TaskMapper taskMapper;
+
+    private Map<String, Task> map = new ConcurrentHashMap<>();
 
     @Override
     public IBaseDao<Task> getBaseDao() {
@@ -36,22 +40,33 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements ITaskServi
     }
 
     @Override
-    public Long insertPTaskWithReturn(String name, String desc, String type, Long userId) {
-        Task task = new Task();
-        task.setName(name);
-        task.setDesc(desc);
-        task.setType(type);
-        task.setUpdateUser(userId);
+    public Long insertTaskWithReturn(Task task) {
         //插入个人任务并返回主键
-        taskMapper.insertPTaskWithReturn(task);
+        taskMapper.insertTaskWithReturn(task);
         //将任务id与userId绑定
         Long taskId = task.getId();
+        Long userId = task.getUpdateUser();
         taskMapper.insertRelation(userId, taskId);
+        //将对象存入ConcurrentHashMap
+        String key = "task:" + userId + ":" + task.getGroupId();
+        task.setId(taskId);
+        map.put(key,task);
+
         return taskId;
     }
 
     @Override
     public List<Task> queryGroupTaskByGroupId(Long id) {
         return taskMapper.queryGroupTaskByGroupId(id);
+    }
+
+    @Override
+    public Task queryGroupTask(Long userId, Long groupId) {
+        String key = "task:" + userId+":"+groupId;
+        Task task;
+        do {
+            task = map.get(key);
+        }while (task==null);
+        return task;
     }
 }

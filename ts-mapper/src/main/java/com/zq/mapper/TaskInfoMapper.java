@@ -10,9 +10,9 @@ import java.util.List;
  */
 public interface TaskInfoMapper extends IBaseDao<TaskInfo> {
     /**
-     * 根据taskId查询个人任务详情
+     * 根据taskId查询任务详情
      * @param taskId
      * @return
      */
-    List<TaskInfo> queryPersonalTaskInfoById(Long taskId);
+    List<TaskInfo> queryTaskInfoById(Long taskId);
 }

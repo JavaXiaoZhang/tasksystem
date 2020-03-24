@@ -25,11 +25,11 @@ public interface TaskMapper extends IBaseDao<Task> {
     void deleteTask(Long userId, Long taskId);
 
     /**
-     * 新增个人任务并返回主键
+     * 新增任务并返回主键
      * @param task
      * @return
      */
-    void insertPTaskWithReturn(Task task);
+    void insertTaskWithReturn(Task task);
 
     /**
      * 根据组id查询团队任务
@@ -39,4 +39,11 @@ public interface TaskMapper extends IBaseDao<Task> {
     List<Task> queryGroupTaskByGroupId(Long id);
 
     void insertRelation(Long userId, Long taskId);
+
+    /**
+     * 根据团队id删除任务
+     * @param groupId
+     * @param userId
+     */
+    void deleteTaskByGroupId(Long groupId, Long userId);
 }

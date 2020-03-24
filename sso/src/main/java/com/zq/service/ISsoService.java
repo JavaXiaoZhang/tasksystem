@@ -1,5 +1,6 @@
 package com.zq.service;
 
+import com.zq.commons.base.IBaseService;
 import com.zq.commons.pojo.ResultBean;
 import com.zq.entity.User;
 
@@ -7,8 +8,9 @@ import java.util.List;
 
 /**
  * Created by XiaoZhang on 2020/2/9 15:29
+ * @author ZQ
  */
-public interface ISsoService {
+public interface ISsoService extends IBaseService<User> {
     /**
      * 验证登录
      * @param user
@@ -22,11 +24,4 @@ public interface ISsoService {
      * @return
      */
     ResultBean checkIsLogin(String jwtToken);
-
-    /**
-     * 根据groupId查询组内用户
-     * @param groupId
-     * @return
-     */
-    List<User> queryUserByGroupId(Long groupId);
 }

@@ -1,10 +1,185 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>group详情界面</title>
-</head>
-<body>
+<div class="row" xmlns:th="http://www.thymeleaf.org">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="page-header">
+                    <h1>
+                        名称： <small id="groupName" th:text="${group.name}"></small>
+                    </h1>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-6">
+                <a id="modal-300832" href="#modal-container-300832" role="button" class="btn" data-toggle="modal" th:hidden="${group.isAdmin=='0'?true:false}">修改</a>
 
-</body>
-</html>
+                <div class="modal" id="modal-container-300832" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="myModalLabel">
+                                    修改团队名称
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">名称</span>
+                                    </div>
+                                    <input type="text" class="form-control"  aria-describedby="basic-addon" id="newGroupName" th:value="${group.name}">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="modifyBtn" th:href="@{/task/modifyGroupName/{groupId}/(groupId=${group.id})}">
+                                    提交
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    取消
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <h3>
+            团队成员
+        </h3>
+        <a id="modal-300833" href="#modal-container-300833" role="button" class="btn" data-toggle="modal" th:hidden="${group.isAdmin=='0'?true:false}">新增成员</a>
+        <div class="modal" id="modal-container-300833" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            新增成员
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">用户名</span>
+                            </div>
+                            <input type="text" class="form-control"  aria-describedby="basic-addon" id="username">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addBtn" th:href="@{/task/addGroupUser/{groupId}/(groupId=${group.id})}">
+                            提交
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            取消
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>
+                    姓名
+                </th>
+                <th>
+                    是否管理员
+                </th>
+                <th colspan="2" th:hidden="${group.isAdmin=='0'?true:false}">
+                    操作
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="table-active" th:each="user:${group.userList}">
+                <td th:text="${user.username}"> </td>
+                <td th:text="${user.isAdmin}=='1'?'是':'否'"> </td>
+                <td>
+                    <button href="/task/modifyIsAdmin/" th:name="${user.id}" type="button" class="btn btn-primary adminBtn" th:hidden="${user.isAdmin=='1'?true:false}">成为管理员</button>
+                </td>
+                <td>
+                    <button href="/task/delUserById/" th:name="${user.id}" type="button" class="btn btn-secondary delUserBtn" th:hidden="${group.isAdmin=='0'?true:false}">删除</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button id="delGroupBtn" th:href="@{/task/delGroup/{groupId}/(groupId=${group.id})}" type="button" class="btn btn-danger btn-md" th:hidden="${group.isAdmin=='0'?true:false}">
+            删除任务组
+        </button>
+    </div>
+    <input th:value="${group.id}" id="groupId" hidden="hidden">
+</div>
+<script type="text/javascript">
+    $(function () {
+        let groupId = $("#groupId").val();
+        //修改团队名称
+        $("#content").on('click','#modifyBtn',function () {
+            //修改名称
+            let newGroupName = $("#newGroupName").val();
+            $("#groupName").text(newGroupName);
+            //持久化数据
+            $.ajax({
+                url: $(this).attr("href")+newGroupName+"/"+userId,
+                method: 'PUT'
+            });
+            $("body").removeClass('modal-open');
+        });
+
+        //添加团队成员
+        $("#content").on('click','#addBtn',function () {
+            let username = $("#username").val();
+            //持久化数据
+            $.ajax({
+                url: $(this).attr("href")+username+"/"+userId,
+                method: 'POST',
+                async: false
+            });
+            $("body").removeClass('modal-open');
+            $("#content").load("/task/queryGroupInfoByGroupId/"+groupId+"/"+userId);
+        });
+
+        //成为管理员
+        $("#content").on('click','.adminBtn',function () {
+            let modifyUserId = $(this).attr("name");
+            //持久化数据
+            $.ajax({
+                url: $(this).attr("href")+groupId+"/"+modifyUserId+"/"+userId,
+                method: 'PUT',
+                async: false
+            });
+            $("#content").load("/task/queryGroupInfoByGroupId/"+groupId+"/"+userId);
+        });
+
+        //删除用户
+        $("#content").on('click','.delUserBtn',function () {
+            let delUserId = $(this).attr("name");
+            //持久化数据
+            $.ajax({
+                url: $(this).attr("href")+groupId+"/"+delUserId+"/"+userId,
+                method: 'PUT',
+                async: false
+            });
+            $("#content").load("/task/queryGroupInfoByGroupId/"+groupId+"/"+userId);
+        });
+
+        //任务组
+        $("#content").on('click','#delGroupBtn',function () {
+            //持久化数据
+            $.ajax({
+                url: $(this).attr("href")+userId,
+                method: 'PUT',
+                async: false
+            });
+            $("#content").load("/task/querytask.html");
+        });
+    })
+</script>

@@ -4,10 +4,13 @@ import com.zq.commons.base.IBaseService;
 import com.zq.commons.pojo.ResultBean;
 import com.zq.entity.User;
 
+import java.util.List;
+
 /**
  * @author ZQ
+ * @Date 2020/3/19
  */
-public interface IRegisterService extends IBaseService<User> {
+public interface IRegisterService extends IBaseService<User>{
     /**
      * 检查用户名是否存在
      * @param username
@@ -19,7 +22,7 @@ public interface IRegisterService extends IBaseService<User> {
      * 插入用户信息
      * @param user
      */
-    void inserUser(User user);
+    void insertUser(User user);
 
     /**
      * 批量添加账号

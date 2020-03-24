@@ -13,7 +13,7 @@
     id, name, is_delete, update_user, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from t_group
     where id = #{id,jdbcType=BIGINT}
@@ -77,9 +77,7 @@
       <if test="updateUser != null">
         update_user = #{updateUser,jdbcType=BIGINT},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = now(),
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -92,9 +90,9 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="queryGroupByUserId" resultMap="BaseResultMap">
+  <select id="queryGroupByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
     select g.*,ug.is_admin from t_user u join t_user_group ug on u.id = ug.user_id
-            join t_group g on ug.group_id = g.id where g.is_delete='0'
+            join t_group g on ug.group_id = g.id where g.is_delete='0' and u.id=#{userId}
   </select>
   <insert id="insertGroupWithReturn" useGeneratedKeys="true" keyProperty="id">
     insert into t_group (`name`, update_user) values (#{name}, #{updateUser})
@@ -102,4 +100,21 @@
   <insert id="insertRelation">
     insert into t_user_group (user_id,group_id,is_admin,update_user) values (#{userId},#{groupId},'1',#{userId})
   </insert>
+  <update id="deleteGroup">
+    update t_group set is_delete = '1', update_user = #{userId},
+      update_time = now() where id = #{groupId}
+  </update>
+  <insert id="addGroupUser">
+    insert into t_user_group (user_id, group_id,update_user) VALUES ( (SELECT id from t_user where username=#{username}), #{groupId}, #{updateUser} );
+  </insert>
+  <update id="modifyIsAdmin">
+    update t_user_group
+    set is_admin='1', update_user = #{updateUser}, update_time = now()
+        where user_id = #{userId} and group_id=#{groupId};
+  </update>
+  <update id="delUserById">
+    update t_user_group
+    set is_delete='1', update_user = #{updateUser}, update_time = now()
+        where user_id = #{userId} and group_id=#{groupId};
+  </update>
 </mapper>

@@ -16,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,11 +66,6 @@ public class SsoServiceImpl extends BaseServiceImpl<User> implements ISsoService
         } catch (RuntimeException e) {
             return new ResultBean(ResultBeanConstant.ERROR, null);
         }
-    }
-
-    @Override
-    public List<User> queryUserByGroupId(Long groupId) {
-        return userMapper.queryUserByGroupId(groupId);
     }
 
     @Override
