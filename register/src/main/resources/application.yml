@@ -2,7 +2,7 @@ server:
   port: 9091
 spring:
   application:
-    name: register
+    name: register-service
   thymeleaf:
     cache: false
   datasource:
@@ -19,3 +19,8 @@ spring:
           enabled: true
       connection-properties: config.decrypt=true;config.decrypt.key=${public-key}
 public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALuRN2sSGuBQnH1rXqEBsggGiQ5ht/WBig8lP6d9tMz1W00pWtp+bBSdWpAdP/evBrphtGCphlmobll6c4+PuacCAwEAAQ==
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9080/eureka/
+    registry-fetch-interval-seconds: 30

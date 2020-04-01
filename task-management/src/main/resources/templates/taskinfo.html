@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base href="/"/>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <title>任务详情界面</title>
+    <!--bootstrap.min.css-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{task/index/{userId}(userId=${userId})}">Home</a>
+                </li>
+                <li class="nav-item dropdown ml-md-auto">
+                    <button id="delBtn" th:href="@{task/delTask/{taskId}/{userId}/(taskId=${taskId},userId=${userId})}"
+                            type="button" class="btn btn-danger btn-md">
+                        删除
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <hr>
+    <div class="row" align="center">
+        <div class="col-md-3">
+            <div>
+                <h3>Todo</h3>
+            </div>
+            <br>
+            <div th:each="taskInfo:${todoList}">
+                <div class="card text-black-50 mb-3" style="width: 18rem;">
+                    <!--<img src="..." class="card-img-top" alt="...">-->
+                    <a data-toggle="modal" href="#modal-container" th:data-title="${taskInfo.name}"
+                       th:data-id="${taskInfo.id}">
+                        <div class="card-header">
+                            <h5 class="card-title" th:text="${taskInfo.name}">毕业设计</h5>
+                        </div>
+                    </a>
+                    <div class="card-body">
+                        <div class="progress" th:hidden="${taskInfo.progress==null?true:false}">
+                            <div class="progress-bar" role="progressbar" th:style="|width: ${taskInfo.progress}|"
+                                 aria-valuenow="0"
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div>
+                <a href="#modal-container-add" data-toggle="modal" data-title="Todo"
+                   class="btn btn-secondary  btn-block" style="width: 18rem;"><h3>+</h3></a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row-cols-12">
+                <h3>Doing</h3>
+            </div>
+            <br>
+
+            <div th:each="taskInfo:${doingList}">
+                <div class="card text-black-50 mb-3" style="width: 18rem;">
+                    <!--<img src="..." class="card-img-top" alt="...">-->
+                    <a data-toggle="modal" href="#modal-container" th:data-title="${taskInfo.name}"
+                       th:data-id="${taskInfo.id}">
+                        <div class="card-header">
+                            <h5 class="card-title" th:text="${taskInfo.name}">毕业设计</h5>
+                        </div>
+                    </a>
+                    <div class="card-body">
+                        <div class="progress" th:hidden="${taskInfo.progress==null?true:false}">
+                            <div class="progress-bar" role="progressbar" th:style="|width: ${taskInfo.progress}|"
+                                 aria-valuenow="0"
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-cols-12">
+                <a href="#modal-container-add" data-toggle="modal" class="btn btn-secondary  btn-block"
+                   style="width: 18rem;" data-title="Doing"><h3>+</h3></a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row-cols-12">
+                <h3>Done</h3>
+            </div>
+            <br>
+
+            <div th:each="taskInfo:${doneList}">
+                <div class="card text-black-50 mb-3" style="width: 18rem;">
+                    <!--<img src="..." class="card-img-top" alt="...">-->
+                    <a data-toggle="modal" href="#modal-container" th:data-title="${taskInfo.name}"
+                       th:data-id="${taskInfo.id}">
+                        <div class="card-header">
+                            <h5 class="card-title" th:text="${taskInfo.name}">毕业设计</h5>
+                        </div>
+                    </a>
+                    <div class="card-body">
+                        <div class="progress" th:hidden="${taskInfo.progress==null?true:false}">
+                            <div class="progress-bar" role="progressbar" th:style="|width: ${taskInfo.progress}|"
+                                 aria-valuenow="0"
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-cols-12">
+                <a href="#modal-container-add" data-toggle="modal" class="btn btn-secondary btn-block"
+                   style="width: 18rem;" data-title="Done"><h3>+</h3></a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row-cols-12">
+                <h3>归档</h3>
+            </div>
+            <br>
+
+            <div th:each="taskInfo:${fileList}">
+                <a data-toggle="modal" href="#modal-container" th:data-title="${taskInfo.name}"
+                   th:data-id="${taskInfo.id}">
+                    <div class="card text-black-50 bg-light mb-3" style="width: 18rem;">
+                        <!--<img src="..." class="card-img-top" alt="...">-->
+
+                        <div class="card-header">
+                            <h5 class="card-title" th:text="${taskInfo.name}">毕业设计</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div class="modal" id="modal-container" aria-hidden="true" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    新增任务
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">名称</span>
+                    </div>
+                    <input type="text" class="form-control" aria-describedby="basic-addon">
+                </div>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">描述</span>
+                    </div>
+                    <textarea rows="3" cols="20"> </textarea>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modal-container-add" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    新增任务
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" method="post" action="task/addTaskInfo">
+                    <input th:value="${taskId}" id="taskId" name="taskId" hidden="hidden">
+                    <input th:value="${userId}" id="userId" name="updateUser" hidden="hidden">
+                    <input th:value="${isAdmin}" id="isAdmin" name="isAdmin" hidden="hidden">
+                    <input name="status" id="status" hidden="hidden">
+                    <div class="form-group input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">名称</span>
+                        </div>
+                        <input type="text" class="form-control" aria-describedby="basic-addon" name="name" id="taskInfoName">
+                    </div>
+                    <div class="form-group input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">描述</span>
+                        </div>
+                        <textarea rows="3" cols="50" name="desc" id="taskInfoDesc"> </textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-primary" id="addBtn" data-dismiss="modal">
+                    提交
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    取消
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<input th:value="${groupId}" id="groupId" hidden="hidden">
+<!--<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/popper.min.js"></script>-->
+<script type="text/javascript">
+    $(function () {
+        let taskId = $("#taskId").val();
+        let isAdmin = $("#isAdmin").val();
+        socket.onmessage = function (e) {
+            console.log("接收到消息：" + e.data);
+            alert('页面已变更，请及时刷新');
+        }
+
+
+        $("#delBtn").click(function () {
+            //删除后跳转到首页
+            location.href = $(this).attr("href");
+        });
+        //点击任务，弹出模态框
+        $('#modal-container').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            //设置title
+            let title = button.data('title');
+            let modal = $(this);
+            modal.find('.modal-title').text(title);
+            //初始化body
+            let taskInfoId = button.data('id');
+            $.ajax({
+                "url": "task/getTaskInfoById/" + taskInfoId + "/" + isAdmin + "/" + userId + "/" + taskId,
+                "method": "GET",
+                success: function (data) {
+                    modal.find('.modal-body').html(data);
+                }
+            })
+        });
+        $('#modal-container').on('hide.bs.modal', function (event) {
+            //清除缓存，避免出现重复事件
+            $.ajax({cache: false})
+            $('#taskSystem').load('task/queryTaskInfoById/'+taskId+'/'+isAdmin+'/'+userId);
+        })
+        //点击添加，弹出模态框
+        $('#modal-container-add').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            let title = button.data('title');
+            let modal = $(this);
+
+            modal.find('.modal-title').text('add to ' + title);
+            modal.find('#status').val(title);
+        });
+        $("#addBtn").click(function () {
+            //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
+            //$("form").submit();
+            let name = $('#taskInfoName').val();
+            let desc = $('#taskInfoDesc').val();
+            let status = $('#status').val();
+            //序列化表格内容为字符串
+            let formParam = $("form").serialize();
+            $.ajax({
+                url: 'task/addTaskInfo',
+                method: 'POST',
+                data: formParam,
+                success: function () {
+                    //清除缓存，避免出现重复事件
+                    $.ajax({cache: false})
+                    $('#taskSystem').load('task/queryTaskInfoById/'+taskId+'/'+isAdmin+'/'+userId);
+                }
+            })
+        });
+    })
+</script>
+</body>
+</html>

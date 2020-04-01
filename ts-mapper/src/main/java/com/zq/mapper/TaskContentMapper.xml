@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zq.mapper.TaskContentMapper">
+  <resultMap id="BaseResultMap" type="com.zq.entity.TaskContent">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="taskinfo_id" jdbcType="BIGINT" property="taskInfoId" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="is_finished" jdbcType="CHAR" property="isFinished" />
+    <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, taskinfo_id, content, is_finished, is_delete, update_user, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_taskcontent
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update t_taskcontent set is_delete = '0'
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.zq.entity.TaskContent">
+    insert into t_taskcontent (id, taskinfo_id, content, 
+      is_finished, is_delete, update_user, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{taskInfoId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR},
+      #{isFinished,jdbcType=CHAR}, #{isDelete,jdbcType=CHAR}, #{updateUser,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zq.entity.TaskContent"  useGeneratedKeys="true" keyProperty="id">
+    insert into t_taskcontent
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskInfoId != null">
+        taskinfo_id,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskInfoId != null">
+        #{taskInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zq.entity.TaskContent">
+    update t_taskcontent
+    <set>
+      <if test="taskInfoId != null">
+        taskinfo_id = #{taskInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="isFinished != null">
+        is_finished = #{isFinished,jdbcType=CHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=CHAR},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zq.entity.TaskContent">
+    update t_taskcontent
+    set taskinfo_id = #{taskInfoId,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      is_finished = #{isFinished,jdbcType=CHAR},
+      is_delete = #{isDelete,jdbcType=CHAR},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="modifyContentIsFinished">
+    update t_taskcontent
+    set is_finished = #{isFinished}, update_user = #{updateUser}, update_time = now() where id = #{taskContentId}
+  </update>
+  <select id="queryTaskContentListByTaskInfoId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from t_taskcontent where taskinfo_id = #{taskInfoId} and is_delete='0'
+  </select>
+</mapper>

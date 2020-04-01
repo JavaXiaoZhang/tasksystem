@@ -2,7 +2,7 @@ package com.zq.controller;
 
 import com.zq.commons.constant.ResultBeanConstant;
 import com.zq.commons.pojo.ResultBean;
-import com.zq.entity.TUser;
+import com.zq.entity.User;
 import com.zq.service.IRegisterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class RegisterController {
     private IRegisterService registerService;
 
     @PostMapping("register")
-    public String register(TUser user, ModelMap modelMap) {
+    public String register(User user, ModelMap modelMap) {
         //检查用户名是否存在
         ResultBean resultBean = registerService.checkUsername(user.getUsername());
         //如果用户名不存在则插入用户数据
@@ -50,8 +50,10 @@ public class RegisterController {
         return "admin";
     }
 
-    @GetMapping("admin")
-    public String admin() {
+    @GetMapping("admin/{userId}")
+    public String admin(@PathVariable("userId") Long userId, ModelMap modelMap) {
+        modelMap.put("userId",userId);
+        System.out.println("userId:"+userId);
         return "admin";
     }
 }

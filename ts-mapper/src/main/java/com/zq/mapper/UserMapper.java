@@ -1,7 +1,7 @@
 package com.zq.mapper;
 
 import com.zq.commons.base.IBaseDao;
-import com.zq.entity.TUser;
+import com.zq.entity.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -9,13 +9,13 @@ import java.util.List;
 /**
  * @author ZQ
  */
-public interface TUserMapper extends IBaseDao<TUser> {
+public interface UserMapper extends IBaseDao<User> {
     /**
-     * 根据用户名查询TUser
+     * 根据用户名查询User
      * @param username
-     * @return TUser对象
+     * @return User对象
      */
-    TUser selectByUsername(String username);
+    User selectByUsername(String username);
 
     /**
      * 根据用户名查询Id
@@ -32,4 +32,23 @@ public interface TUserMapper extends IBaseDao<TUser> {
      * @return
      */
     Integer batInsert(@Param("numList") List<String> list, @Param("password") String password, @Param("userId") Long userId);
+
+    /**
+     * 根据groupId查询组内用户
+     * @param groupId
+     * @return
+     */
+    List<User> queryUserByGroupId(Long groupId);
+
+    /**
+     * 根据taskInfoId查询userList
+     * @param taskInfoId
+     * @return
+     */
+    List<User> queryUserListByTaskInfoId(Long taskInfoId);
+
+    List<Long> getGroupUserIds(Long groupId);
+
+    String getUsername(Long userId);
+
 }

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base href="/"/>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html">
+    <title>taskinfo-modal</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="row">
+                <span class="badge badge-default">描述</span>
+                <button id="modifyDesc" type="button" class="btn btn-sm btn-light"
+                        th:hidden="${isAdmin=='0'?true:false}">
+                    +
+                </button>
+            </div>
+            <div class="row">
+                <span id="descSpan" class="badge badge-default" th:text="${taskInfo.desc}">描述</span>
+                <div hidden="hidden" id="descDiv" class="row">
+                    <input type="text" class="input-group" id="descInput" style="width: 18rem;">
+                    <button id="descBtn" type="button" class="btn btn-sm btn-primary">提交</button>
+                </div>
+            </div>
+            <br>
+            <div th:hidden="${taskInfo.type=='0'?true:false}">
+                <div class="row">
+                    <span class="badge badge-default">成员</span>
+                </div>
+                <div class="row">
+                    <div th:each="user:${taskInfo.userList}">
+                        <span class="badge badge-default" th:text="${user.username}">成员</span>
+                    </div>
+                    <button id="member" type="button" class="btn btn-sm btn-light"
+                            th:hidden="${isAdmin=='0'?true:false}">
+                        +
+                    </button>
+                </div>
+                <div hidden="hidden" id="addDiv" class="row">
+                    <input type="text" class="input-group" id="memberInput" style="width: 18rem;">
+                    <button id="addBtn" type="button" class="btn btn-sm btn-primary">添加</button>
+                </div>
+            </div>
+            <div class="row">
+                <span class="badge badge-default">到期日</span>
+                <button id="deadTime" type="button" class="btn btn-sm btn-light">
+                    +
+                </button>
+            </div>
+            <div class="form-group" id="dateDiv" th:hidden="${taskInfo.deadTime==null?true:false}">
+                <input type="checkbox" class="form-check-input" id="isFinished"
+                       th:checked="${taskInfo.isFinished=='1'?true:false}">
+                <input type="date" th:value="${taskInfo.deadTime}" class="input-group" id="dateInput"
+                       style="width: 10rem;" disabled="disabled">
+                <div th:if="${taskInfo.isFinished} eq '1'">
+                    <span class="badge badge-success">完成</span>
+                </div>
+                <div th:if="${taskInfo.isFinished} eq '0'">
+                    <div th:if="${taskInfo.isOvertime} eq '1'">
+                        <span class="badge badge-danger">过期</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h4>CheckList</h4>
+            </div>
+
+            <div class="progress" th:hidden="${taskInfo.progress==null?true:false}">
+                <div class="progress-bar" role="progressbar" th:style="|width: ${taskInfo.progress}|" aria-valuenow="0"
+                     aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div th:each="taskContent:${taskInfo.taskContentList}">
+                <div class="form-group contentDiv">
+                    <input type="checkbox" class="form-check-input isContentFinished" th:id="${taskContent.id}"
+                           th:checked="${taskContent.isFinished=='1'?true:false}">
+                    <span class="badge badge-default" th:text="${taskContent.content}"></span>
+                    <button th:name="${taskContent.id}" type="button" class="btn btn-sm btn-light delContent"
+                            hidden="hidden">
+                        删除
+                    </button>
+                </div>
+            </div>
+            <div class="row" th:hidden="${isAdmin=='0'?true:false}">
+                <textarea rows="3" cols="100" id="content"> </textarea>
+                <button id="addContent" type="button" class="btn btn-sm btn-light">
+                    添加项目
+                </button>
+            </div>
+            <br>
+            <div class="row">
+                <h4>评论</h4>
+            </div>
+            <div id="wEditor"/>
+            <div class="row">
+                <button id="addComment" type="button" class="btn btn-sm btn-light">
+                    添加评论
+                </button>
+            </div>
+            <div th:each="taskComment:${taskInfo.taskCommentList}">
+                <div class="commentDiv">
+                    <div class="row">
+                        <span class="badge badge-default" th:text="${taskComment.username}"></span>
+                        <span class="badge badge-default" th:text="${taskComment.updateTime}"></span>
+                    </div>
+                    <div th:if="${taskComment.img} ne null">
+                        <a th:href="${taskComment.img}" target="_blank"> <img th:src="${taskComment.img}" class="mw-100"
+                                                                              style="height: 100px"/></a>
+                    </div>
+                    <span class="badge badge-default" th:text="${taskComment.comment}"></span>
+                    <button th:name="${taskComment.id}" type="button" class="btn btn-sm btn-light delComment"
+                            hidden="hidden">
+                        删除
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+
+            <div class=" btn-group-vertical" role="group">
+
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:hidden="${isAdmin=='0'?true:false}">
+                        移动卡片
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item moveCard" href="#" th:hidden="${taskInfo.status=='Todo'?true:false}">Todo</a>
+                        <a class="dropdown-item moveCard" href="#" th:hidden="${taskInfo.status=='Doing'?true:false}">Doing</a>
+                        <a class="dropdown-item moveCard" href="#" th:hidden="${taskInfo.status=='Done'?true:false}">Done</a>
+                        <div th:hidden="${taskInfo.status=='File'?true:false}">
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item moveCard" href="#">File</a>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <!--<button class="btn btn-light btn-block" type="button" th:hidden="${isAdmin=='0'?true:false}">
+                    标签
+                </button>
+                <br>-->
+                <!--<button class="btn btn-light btn-block" type="button" th:hidden="${isAdmin=='0'?true:false}">
+                    归档
+                </button>-->
+                <br>
+                <span class="badge badge-default">操作</span>
+                <button class="btn btn-light btn-block" id="delTaskInfo" type="button" th:hidden="${isAdmin=='0'?true:false}">
+                    删除
+                </button>
+                <br>
+                <!--<button class="btn btn-light  btn-block" type="button">
+                    分享
+                </button>-->
+            </div>
+        </div>
+    </div>
+</div>
+<input id="taskInfoId" hidden="hidden" th:value="${taskInfo.id}">
+<input th:value="${taskId}" id="taskId" hidden="hidden">
+<input th:value="${userId}" id="userId" hidden="hidden">
+<input th:value="${isAdmin}" id="isAdmin" hidden="hidden">
+
+<script src="js/wangEditor.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        const taskInfoId = $("#taskInfoId").val();
+        const taskId = $("#taskId").val();
+        const userId = $("#userId").val();
+        const isAdmin = $("#isAdmin").val();
+
+        //初始化富文本框
+        let E = window.wangEditor;
+        let editor = new E('#wEditor');
+        // 自定义菜单配置
+        editor.customConfig.menus = [
+            'emoticon',  // 表情
+            'image',  // 插入图片
+        ];
+        // 配置服务器端地址
+        editor.customConfig.uploadImgServer = 'task/upload';
+        editor.customConfig.uploadFileName = 'files';
+        // 限制一次最多上传 1 张图片
+        editor.customConfig.uploadImgMaxLength = 1;
+        // 将图片大小限制为 5M
+        editor.customConfig.uploadImgMaxSize = 5 * 1024 * 1024;
+        editor.customConfig.uploadImgHooks = {
+            // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
+            // （但是，服务器端返回的必须是一个 JSON 格式字符串！！！否则会报错）
+            customInsert: function (insertImg, result, editor) {
+                // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
+                // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
+                // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
+                // result 必须是一个 JSON 格式字符串！！！否则报错
+                let url = result.data[0];
+                $.ajax({
+                    'url': 'task/addComment/' + taskInfoId + "/" + userId + "/" + isAdmin + "/" + taskId,
+                    'method': 'POST',
+                    'data': "img=" + url,
+                    success: function (data) {
+                        //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
+                        $('#modal-container').find('.modal-body').html(data);
+                    }
+                })
+            }
+        };
+        editor.create();
+
+        //点击+
+        $("#modifyDesc").click(function () {
+            $(this).prop("hidden", true);
+            $("#descSpan").prop("hidden", true);
+            $("#descDiv").prop("hidden", false);
+            let desc = $("#descSpan").text();
+            $("#descInput").val(desc);
+        })
+
+        //点击desc的提交
+        $("#descBtn").click(function () {
+            //获取值并清空
+            let desc = $("#descInput").val();
+            $("#descInput").val('');
+            //显示到span中
+            $("#descDiv").prop("hidden", true);
+            $("#descSpan").text(desc);
+            $("#descSpan").prop("hidden", false);
+            //持久化
+            $.ajax({
+                'url': 'task/modifyDesc/' + taskInfoId + "/" + desc + "/" + userId + "/" + isAdmin + "/" + taskId,
+                'method': 'PUT',
+                success: function (data) {
+                    $('#modal-container').find('.modal-body').html(data);
+                }
+            })
+            //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
+        })
+
+        //点击+
+        $("#member").click(function () {
+            $(this).prop("hidden", true);
+            $("#addDiv").prop("hidden", false);
+        })
+        //点击添加成员
+        $("#addBtn").click(function () {
+            $("#addDiv").prop("hidden", true);
+            $("#member").prop("hidden", false);
+            let username = $("#memberInput").val();
+            if (username != null && username.trim() != "") {
+                $.ajax({
+                    'url': 'task/addUserToTaskInfo/' + taskInfoId + "/" + username + "/" + userId + "/" + isAdmin + "/" + taskId,
+                    'method': 'POST',
+                    success: function (data) {
+                        $('#modal-container').find('.modal-body').html(data);
+                    }
+                })
+            }
+            //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
+        })
+        //点击日期输入框对应的+
+        $("#deadTime").click(function () {
+            $("#dateDiv").prop("hidden", false);
+            $("#dateInput").prop("disabled", false);
+        })
+        //日期输入框
+        $("#dateInput").blur(function () {
+            let deadTime = $(this).val();
+            if (deadTime != null && deadTime.trim() != "") {
+                $(this).prop("disabled", true);
+                //传日期到后台
+                $.ajax({
+                    'url': 'task/modifyDeadtime/' + taskInfoId + "/" + deadTime + "/" + userId + "/" + isAdmin + "/" + taskId,
+                    'method': 'PUT',
+                    success: function (data) {
+                        $('#modal-container').find('.modal-body').html(data);
+                    }
+                })
+            }
+        })
+        //点击taskInfo的复选框
+        $("#isFinished").click(function () {
+            //传到后台
+            let isFinished = $(this).prop("checked");
+            $.ajax({
+                'url': 'task/modifyIsFinished/' + taskInfoId + "/" + isFinished + "/" + userId + "/" + isAdmin + "/" + taskId,
+                'method': 'PUT',
+                success: function (data) {
+                    $('#modal-container').find('.modal-body').html(data);
+                }
+            })
+            //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
+        })
+        //点击taskContent的复选框
+        $(".isContentFinished").click(function () {
+            //传到后台
+            let isFinished = $(this).prop("checked");
+            let taskContentId = $(this).prop("id");
+            $.ajax({
+                'url': 'task/modifyContentIsFinished/' + taskContentId + "/" + taskInfoId + "/" + isFinished + "/" + userId + "/" + isAdmin + "/" + taskId,
+                'method': 'PUT',
+                success: function (data) {
+                    $('#modal-container').find('.modal-body').html(data);
+                }
+            })
+            //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
+        })
+
+        //taskContent的删除按钮
+        $(".contentDiv").mouseenter(function () {
+            if (isAdmin == '1'){
+                $(this).children('button').prop('hidden', false);
+            }
+        })
+        $(".contentDiv").mouseleave(function () {
+            if (isAdmin == '1') {
+                $(this).children('button').prop('hidden', true);
+            }
+        })
+
+        //点击taskContent的删除
+        $(".delContent").click(function () {
+            let taskContentId = $(this).prop('name');
+            $.ajax({
+                'url': 'task/delContent/' + taskInfoId + "/" + taskContentId + "/" + userId + "/" + taskId,
+                'method': 'DELETE',
+                success: function (data) {
+                    $('#modal-container').find('.modal-body').html(data);
+                }
+            })
+            //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
+        })
+
+        //点击添加项目按钮
+        $("#addContent").click(function () {
+            let content = $("#content").val();
+            //清空输入框
+            $("#content").val("");
+            if (content != null && content.trim() != "") {
+                //传到后台
+                $.ajax({
+                    'url': 'task/addTaskContent/' + taskInfoId + "/" + content + "/" + userId + "/" + isAdmin + "/" + taskId,
+                    'method': 'POST',
+                    success: function (data) {
+                        $('#modal-container').find('.modal-body').html(data);
+                    }
+                })
+            }
+            //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
+        })
+        $("#addComment").click(function () {
+            let comment = editor.txt.text();
+            editor.txt.clear();
+            $.ajax({
+                'url': 'task/addComment/' + taskInfoId + "/" + comment + "/" + userId + "/" + isAdmin + "/" + taskId,
+                'method': 'POST',
+                success: function (data) {
+                    $('#modal-container').find('.modal-body').html(data);
+                }
+            })
+            //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
+        })
+
+        //taskComment的删除按钮
+        $(".commentDiv").mouseenter(function () {
+            if (isAdmin == '1'){
+                $(this).children('button').prop('hidden', false);
+            }
+        })
+        $(".commentDiv").mouseleave(function () {
+            if (isAdmin == '1') {
+                $(this).children('button').prop('hidden', true);
+            }
+        })
+
+        //点击taskContent的删除
+        $(".delComment").click(function () {
+            let taskCommentId = $(this).prop('name');
+            $.ajax({
+                'url': 'task/delComment/' + taskInfoId + "/" + taskCommentId + "/" + userId + "/" + taskId,
+                'method': 'DELETE',
+                success: function (data) {
+                    $('#modal-container').find('.modal-body').html(data);
+                }
+            })
+            //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
+        })
+
+        //移动卡片
+        $(".moveCard").click(function () {
+            let status = $(this).text();
+            $.ajax({
+                'url': 'task/modifyStatus/' + taskInfoId + "/" + status + "/" + userId + "/" + taskId,
+                'method': 'PUT',
+                success: function () {
+                    $('#taskSystem').load('task/queryTaskInfoById/'+taskId+'/'+isAdmin+'/'+userId);
+                }
+            })
+            //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
+            return false;
+        })
+
+        //点击删除
+        $('#delTaskInfo').click(function () {
+            $.ajax({
+                'url': 'task/delTaskInfo/' + taskInfoId + "/" + userId + "/" + taskId,
+                'method': 'DELETE',
+                success: function () {
+                    $('#taskSystem').load('task/queryTaskInfoById/'+taskId+'/'+isAdmin+'/'+userId);
+                }
+            })
+            //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
+        })
+    })
+</script>
+</body>
+</html>

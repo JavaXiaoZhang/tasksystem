@@ -8,6 +8,13 @@
         <module>register</module>
         <module>ts-mapper</module>
         <module>task-management</module>
+        <module>gateway</module>
+        <module>eureka</module>
+        <module>ts-basic</module>
+        <module>quiz</module>
+        <module>msg</module>
+        <module>temp</module>
+        <module>RocketMQTest</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -73,6 +80,39 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
+            <!--FastDFS-->
+            <dependency>
+                <groupId>com.github.tobato</groupId>
+                <artifactId>fastdfs-client</artifactId>
+                <version>1.26.1-RELEASE</version>
+            </dependency>
+
+            <!--rocketMQ依赖-->
+            <!-- https://mvnrepository.com/artifact/org.apache.rocketmq/rocketmq-spring-boot-starter -->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>2.1.0</version>
+            </dependency>
+
+
+            <!--<dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2.2.0.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>-->
+
+            <!--Netty-->
+            <!--netty依赖包-->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>4.1.25.Final</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

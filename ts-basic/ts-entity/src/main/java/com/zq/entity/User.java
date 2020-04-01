@@ -1,8 +1,12 @@
 package com.zq.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class TUser {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = -1L;
+
     private Long id;
 
     private String username;
@@ -19,12 +23,14 @@ public class TUser {
 
     private Date updateTime;
 
-    public Long getId() {
-        return id;
+    private String isAdmin;
+
+    public String getIsAdmin() {
+        return isAdmin;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIsAdmin(String isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     public String getUsername() {
@@ -32,7 +38,15 @@ public class TUser {
     }
 
     public void setUsername(String username) {
-        this.username = username == null ? null : username.trim();
+        this.username = username;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getPassword() {

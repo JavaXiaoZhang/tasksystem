@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zq.mapper.GroupMapper">
+  <resultMap id="BaseResultMap" type="com.zq.entity.Group">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="is_admin" jdbcType="CHAR" property="isAdmin" />
+    <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, is_delete, update_user, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_group
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_group
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zq.entity.Group">
+    insert into t_group (id, name, is_delete, 
+      update_user, update_time)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{isDelete,jdbcType=CHAR}, 
+      #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zq.entity.Group">
+    insert into t_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=CHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zq.entity.Group">
+    update t_group
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=CHAR},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+        update_time = now(),
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zq.entity.Group">
+    update t_group
+    set name = #{name,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=CHAR},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="queryGroupByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select g.*,ug.is_admin from t_user u join t_user_group ug on u.id = ug.user_id
+            join t_group g on ug.group_id = g.id where g.is_delete='0' and u.id=#{userId}
+  </select>
+  <insert id="insertGroupWithReturn" useGeneratedKeys="true" keyProperty="id">
+    insert into t_group (`name`, update_user) values (#{name}, #{updateUser})
+  </insert>
+  <insert id="insertRelation">
+    insert into t_user_group (user_id,group_id,is_admin,update_user) values (#{userId},#{groupId},'1',#{userId})
+  </insert>
+  <update id="deleteGroup">
+    update t_group set is_delete = '1', update_user = #{userId},
+      update_time = now() where id = #{groupId}
+  </update>
+  <insert id="addGroupUser">
+    insert into t_user_group (user_id, group_id,update_user) VALUES ( #{userId}, #{groupId}, #{updateUser} );
+  </insert>
+  <update id="modifyIsAdmin">
+    update t_user_group
+    set is_admin='1', update_user = #{updateUser}, update_time = now()
+        where user_id = #{userId} and group_id=#{groupId};
+  </update>
+  <update id="delUserById">
+    update t_user_group
+    set is_delete='1', update_user = #{updateUser}, update_time = now()
+        where user_id = #{userId} and group_id=#{groupId};
+  </update>
+  <select id="selectGroupByUsername" resultType="java.lang.Long">
+    select id from t_user_group where user_id = (SELECT id from t_user where username=#{username} and is_delete='0') and group_id = #{groupId}
+  </select>
+  <update id="updateGroupUser" parameterType="java.lang.Long">
+    update t_user_group set is_delete='0', is_admin='0' where id = #{id}
+  </update>
+  <select id="queryGroupIdByTaskId" parameterType="java.lang.Long" resultType="java.lang.Long">
+    select group_id from t_task where id = #{taskId} and is_delete = '0'
+  </select>
+</mapper>
