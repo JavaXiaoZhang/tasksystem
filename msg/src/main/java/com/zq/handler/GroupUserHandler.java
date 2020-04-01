@@ -29,7 +29,7 @@ public class GroupUserHandler extends SimpleChannelInboundHandler<Message> {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
+    protected void messageReceived(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
         Channel channel = channelHandlerContext.channel();
         String msgType = message.getMsgType();
         if ("5".equals(msgType)){

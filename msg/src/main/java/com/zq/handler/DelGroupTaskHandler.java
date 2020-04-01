@@ -26,7 +26,7 @@ public class DelGroupTaskHandler extends SimpleChannelInboundHandler<Message> {
     private ChannelUtil channelUtil;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
+    protected void messageReceived(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
         String msgType = message.getMsgType();
         if ("4".equals(msgType)){
             Map<String, Object> data = message.getData();

@@ -28,9 +28,9 @@ public class AddChannelHandler extends SimpleChannelInboundHandler<TextWebSocket
     private ChannelUtil channelUtil;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
-        Channel channel = ctx.channel();
-        String text = msg.text();
+    protected void messageReceived(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame textWebSocketFrame) throws Exception {
+        Channel channel = channelHandlerContext.channel();
+        String text = textWebSocketFrame.text();
         ObjectMapper objectMapper = new ObjectMapper();
         Message message = objectMapper.readValue(text, Message.class);
         String msgType = message.getMsgType();
@@ -38,9 +38,9 @@ public class AddChannelHandler extends SimpleChannelInboundHandler<TextWebSocket
             Map<String, Object> data = message.getData();
             Long userId = Long.valueOf(String.valueOf(data.get("userId")));
             channelUtil.add( userId, channel);
-            log.info("{}发来连接请求,用户id为{}", ctx.channel().remoteAddress(),userId);
+            log.info("{}发来连接请求,用户id为{}", channelHandlerContext.channel().remoteAddress(),userId);
         }
         //交给下一个处理器处理
-        ctx.fireChannelRead(message);
+        channelHandlerContext.fireChannelRead(message);
     }
 }

@@ -46,8 +46,7 @@ public class AddGroupTaskHandler extends SimpleChannelInboundHandler<Message> {
     }*/
 
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
-
+    protected void messageReceived(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
         //发送信息的channel
         Channel channel = channelHandlerContext.channel();
         //发送的信息
@@ -66,7 +65,7 @@ public class AddGroupTaskHandler extends SimpleChannelInboundHandler<Message> {
             List<Channel> channelList = channelUtil.getGroupChannelsByGroupId(groupId);
             log.info("groupId:{},channelList长度{}",groupId,channelList.size());
             for (Channel channels:
-                 channelList) {
+                    channelList) {
                 if (channels.equals(channel)){
                     username = channelUtil.getUsername(channel);
                     log.info("channel相同，发送消息给自己",channel.remoteAddress());
