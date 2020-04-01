@@ -5,6 +5,9 @@ spring:
     name: task-management
   thymeleaf:
     cache: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
   redis:
     host: 192.168.33.10 # Redis服务器地址
     database: 0 # Redis数据库索引（默认为0）
@@ -39,7 +42,24 @@ logging:
   #设置全局的输入级别，root代表全局
   level:
     root: info
-#eureka:
-#  client:
-#    service-url:
-#      defaultZone: http://localhost:9080/eureka/
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9080/eureka/
+
+fdfs:
+  connect-timeout: 600
+  so-timeout: 3000
+  pool:
+    jmx-enabled: false
+  thumb-image:
+    height: 100
+    width: 100
+  tracker-list: 101.37.168.55:22122
+image:
+  server: http://101.37.168.55:7777/
+#Rocketmq配置
+rocketmq:
+  name-server: 192.168.33.10:9876
+  producer:
+    group: pp

@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,7 +39,7 @@ public class SsoServiceImpl extends BaseServiceImpl<User> implements ISsoService
         if (currentUser != null && passwordEncoder.matches(user.getPassword(), currentUser.getPassword())) {
             JwtUtils jwtUtils = new JwtUtils();
             //key不能太简单，否则报错
-            jwtUtils.setSecretKey("zhang");
+            jwtUtils.setSecretKey("zhangmouren");
             jwtUtils.setTtl(30 * 60 * 1000);
 
             String jwtToken = jwtUtils.createJwtToken(currentUser.getId().toString(), currentUser.getUsername());
@@ -58,14 +59,44 @@ public class SsoServiceImpl extends BaseServiceImpl<User> implements ISsoService
     @Override
     public ResultBean checkIsLogin(String jwtToken) {
         JwtUtils jwtUtils = new JwtUtils();
-        jwtUtils.setSecretKey("zq");
+        jwtUtils.setSecretKey("zhangmouren");
         try {
             Claims claims = jwtUtils.parseJwtToken(jwtToken);
+            logger.info("解密：{}",claims.getId());
             String userId = claims.getId();
             return new ResultBean(ResultBeanConstant.OK, userId);
         } catch (RuntimeException e) {
             return new ResultBean(ResultBeanConstant.ERROR, null);
         }
+    }
+
+    @Override
+    public List<Long> getGroupUserIds(Long groupId) {
+        List<Long> userIds = userMapper.getGroupUserIds(groupId);
+        return userIds;
+    }
+
+    @Override
+    public ResultBean getUsername(Long userId) {
+        String username = userMapper.getUsername(userId);
+        if (username == null || "".equals(username.trim())){
+            logger.info("getUsername查询失败：username为空");
+            return new ResultBean(ResultBeanConstant.ERROR,"username为空");
+        }else {
+            logger.info("getUsername查询成功:{}",username);
+            return new ResultBean(ResultBeanConstant.OK, username);
+        }
+    }
+
+    @Override
+    public ResultBean getUserId(String username) {
+        Long userId = userMapper.selIdByUsername(username);
+        if (userId !=null){
+            logger.info("userId:{}", userId);
+            return new ResultBean(ResultBeanConstant.OK,userId);
+        }
+        logger.info("getUserId查询失败：userId为空");
+        return new ResultBean(ResultBeanConstant.ERROR,"userId为空");
     }
 
     @Override

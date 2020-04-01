@@ -78,7 +78,7 @@
 
   <!--根据用户名查询出主键-->
   <select id="selIdByUsername" parameterType="java.lang.String" resultType="java.lang.Long">
-    select id from t_user where username = #{username}
+    select id from t_user where username = #{username} and is_delete='0'
   </select>
 
   <!--批量插入用户账号-->
@@ -94,8 +94,16 @@
         select u.id, u.username,ug.is_admin from t_user u join t_user_group ug on u.id = ug.user_id
             where ug.group_id= #{groupId} and u.is_delete='0' and ug.is_delete='0'
   </select>
-  <select id="queryUserListByTaskId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="queryUserListByTaskInfoId" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select u.id, u.username from t_user u join t_user_taskinfo uk on u.id = uk.user_id
             where uk.taskinfo_id= #{taskId} and u.is_delete='0' and uk.is_delete='0'
   </select>
+  <select id="getGroupUserIds" parameterType="java.lang.Long" resultType="java.lang.Long">
+    select u.id from t_user u join t_user_group ug on u.id = ug.user_id
+            where ug.group_id = #{groupId} and u.is_delete='0' and ug.is_delete='0'
+  </select>
+  <select id="getUsername" parameterType="java.lang.Long" resultType="java.lang.String">
+    select username from t_user where id = #{userId} and is_delete='0'
+  </select>
+
 </mapper>

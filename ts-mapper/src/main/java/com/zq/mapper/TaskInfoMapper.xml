@@ -7,10 +7,11 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="desc" jdbcType="VARCHAR" property="desc" />
     <result column="status" jdbcType="CHAR" property="status" />
+    <result column="type" jdbcType="CHAR" property="type" />
     <result column="is_finished" jdbcType="CHAR" property="isFinished" />
-    <result column="dead_time" jdbcType="TIMESTAMP" property="deadTime" />
+    <result column="dead_time" jdbcType="CHAR" property="deadTime" />
     <result column="is_delete" jdbcType="CHAR" property="isDelete" />
-    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
@@ -22,19 +23,19 @@
     from t_taskinfo
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_taskinfo
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update t_taskinfo set is_delete='1'
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
   <insert id="insert" parameterType="com.zq.entity.TaskInfo">
     insert into t_taskinfo (id, task_id, is_finished,
       dead_time, finish_time, is_delete, 
       update_user, update_time)
     values (#{id,jdbcType=BIGINT}, #{taskId,jdbcType=BIGINT}, #{isFinished,jdbcType=CHAR}, 
-      #{deadTime,jdbcType=TIMESTAMP}, #{finishTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=CHAR}, 
-      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+      #{deadTime,jdbcType=CHAR}, #{finishTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=CHAR},
+      #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zq.entity.TaskInfo">
+  <insert id="insertSelective" parameterType="com.zq.entity.TaskInfo" useGeneratedKeys="true" keyProperty="id">
     insert into t_taskinfo
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -82,10 +83,10 @@
         #{isFinished,jdbcType=CHAR},
       </if>
       <if test="deadTime != null">
-        #{deadTime,jdbcType=TIMESTAMP},
+        #{deadTime,jdbcType=CHAR},
       </if>
       <if test="updateUser != null">
-        #{updateUser,jdbcType=VARCHAR},
+        #{updateUser,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -95,24 +96,25 @@
       <if test="taskId != null">
         task_id = #{taskId,jdbcType=BIGINT},
       </if>
+      <if test="desc != null">
+        `desc` = #{desc},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=CHAR},
+      </if>
       <if test="isFinished != null">
         is_finished = #{isFinished,jdbcType=CHAR},
       </if>
       <if test="deadTime != null">
-        dead_time = #{deadTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="finishTime != null">
-        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+        dead_time = #{deadTime,jdbcType=CHAR},
       </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=CHAR},
       </if>
       <if test="updateUser != null">
-        update_user = #{updateUser,jdbcType=VARCHAR},
+        update_user = #{updateUser,jdbcType=BIGINT},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = now()
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -120,17 +122,32 @@
     update t_taskinfo
     set task_id = #{taskId,jdbcType=BIGINT},
       is_finished = #{isFinished,jdbcType=CHAR},
-      dead_time = #{deadTime,jdbcType=TIMESTAMP},
+      dead_time = #{deadTime,jdbcType=CHAR},
       finish_time = #{finishTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=CHAR},
-      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_user = #{updateUser,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
   <select id="queryTaskInfoById" resultMap="BaseResultMap">
-    select ti.*
+    select ti.*, t.type
     from t_taskinfo ti join t_task t on ti.task_id=t.id
-    where t.id = #{taskId} and t.type = '0' and ti.is_delete = '0' and t.is_delete='0'
+    where t.id = #{taskId} and ti.is_delete = '0' and t.is_delete='0'
+  </select>
+  <insert id="addUserToTaskInfo">
+    insert into t_user_taskinfo(user_id, taskinfo_id, update_user) values ( #{userId}, #{taskInfoId}, #{updateUser})
+  </insert>
+  <update id="modifyDeadtime">
+    update t_taskinfo set dead_time = #{deadTime}, update_user = #{updateUser} where id=#{taskInfoId}
+  </update>
+  <update id="modifyIsFinished">
+    update t_taskinfo set is_finished = #{isFinished}, update_user = #{updateUser} where id=#{taskInfoId}
+  </update>
+  <select id="getUserListByTaskInfoId" parameterType="java.lang.Long" resultType="java.lang.Long">
+    select user_id from t_user_taskinfo where taskinfo_id = #{taskInfoId} and is_delete='0'
+  </select>
+  <select id="queryTaskInfoNameById" parameterType="java.lang.Long" resultType="java.lang.String">
+    select `name` from t_taskinfo where id = #{taskInfoId} and is_delete = '0'
   </select>
 </mapper>

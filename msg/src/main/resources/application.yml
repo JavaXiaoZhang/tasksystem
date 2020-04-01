@@ -1,0 +1,49 @@
+server:
+  port: 9083
+spring:
+  application:
+    name: msg
+  thymeleaf:
+    cache: false
+netty:
+  server:
+    port: 8888
+#spring:
+#  rabbitmq:
+#    host: 134.175.100.149
+#    port: 5672
+#    username: zs
+#    password: 123
+
+#    virtual-host: /OFzs
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9080/eureka/
+feign:
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+  hystrix:
+    enabled: true
+sso:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+    OkToRetryOnAllOperations: true # 是否对所有操作都进行重试
+    MaxAutoRetriesNextServer: 2 # 切换实例的重试次数
+task-management:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+    OkToRetryOnAllOperations: true
+    MaxAutoRetriesNextServer: 2
+#hystrix:
+#  command:
+#    default:
+#      execution:
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 50000
+rocketmq:
+  name-server: 192.168.33.10:9876

@@ -39,10 +39,10 @@ public interface GroupMapper extends IBaseDao<Group> {
     /**
      * 新增团队成员
      * @param groupId
-     * @param username
+     * @param userId
      * @param updateUser
      */
-    void addGroupUser(Long groupId, String username, Long updateUser);
+    void addGroupUser(Long groupId, Long userId, Long updateUser);
 
     /**
      * 修改成员为管理员
@@ -73,4 +73,6 @@ public interface GroupMapper extends IBaseDao<Group> {
      * @param id
      */
     void updateGroupUser(Long id);
+
+    Long queryGroupIdByTaskId(Long taskId);
 }

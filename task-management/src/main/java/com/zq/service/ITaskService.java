@@ -45,5 +45,5 @@ public interface ITaskService extends IBaseService<Task> {
      * @param groupId
      * @return
      */
-    Task queryGroupTask(Long userId, Long groupId);
+//    Task queryGroupTask(Long userId, Long groupId);
 }

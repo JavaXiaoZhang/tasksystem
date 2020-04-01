@@ -1,11 +1,20 @@
 package com.zq.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class TaskComment {
+/**
+ * @author ZQ
+ */
+public class TaskComment implements Serializable {
+
+    private static final long serialVersionUID = -1L;
+
     private Long id;
 
     private Long taskInfoId;
+
+    private String username;
 
     private String comment;
 
@@ -15,7 +24,15 @@ public class TaskComment {
 
     private Long updateUser;
 
-    private Date updateTime;
+    private String updateTime;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public Long getId() {
         return id;
@@ -65,11 +82,11 @@ public class TaskComment {
         this.updateUser = updateUser;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 }

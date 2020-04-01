@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.zq.entity.TaskComment">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="taskinfo_id" jdbcType="BIGINT" property="taskInfoId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="img" jdbcType="VARCHAR" property="img" />
     <result column="is_delete" jdbcType="CHAR" property="isDelete" />
@@ -11,7 +12,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, taskinfo_id, comment, img, is_delete, update_user, update_time
+    id, taskinfo_id, username, comment, img, is_delete, update_user, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -19,10 +20,10 @@
     from t_taskcomment
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_taskcomment
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update t_taskcomment set is_delete='1'
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
   <insert id="insert" parameterType="com.zq.entity.TaskComment">
     insert into t_taskcomment (id, taskinfo_id, comment, 
       img, is_delete, update_user, 
@@ -31,23 +32,20 @@
       #{img,jdbcType=VARCHAR}, #{isDelete,jdbcType=CHAR}, #{updateUser,jdbcType=BIGINT}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zq.entity.TaskComment">
+  <insert id="insertSelective" parameterType="com.zq.entity.TaskComment" useGeneratedKeys="true" keyProperty="id">
     insert into t_taskcomment
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="taskInfoId != null">
         taskinfo_id,
+      </if>
+      <if test="username != null">
+        username,
       </if>
       <if test="comment != null">
         comment,
       </if>
       <if test="img != null">
         img,
-      </if>
-      <if test="isDelete != null">
-        is_delete,
       </if>
       <if test="updateUser != null">
         update_user,
@@ -57,11 +55,11 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="taskInfoId != null">
         #{taskInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="username != null">
+        (select username from t_user where id=#{updateUser} and is_delete='0')
       </if>
       <if test="comment != null">
         #{comment,jdbcType=VARCHAR},
@@ -69,14 +67,11 @@
       <if test="img != null">
         #{img,jdbcType=VARCHAR},
       </if>
-      <if test="isDelete != null">
-        #{isDelete,jdbcType=CHAR},
-      </if>
       <if test="updateUser != null">
         #{updateUser,jdbcType=BIGINT},
       </if>
       <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
+        #{updateTime},
       </if>
     </trim>
   </insert>
@@ -114,4 +109,7 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="queryTaskCommentListByTaskInfoId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from t_taskcomment where taskinfo_id = #{taskInfoId} and is_delete='0'
+  </select>
 </mapper>

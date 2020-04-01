@@ -1,12 +1,18 @@
 package com.zq.entity;
 
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author ZQ
  */
-public class TaskInfo {
+public class TaskInfo implements Serializable {
+
+    private static final long serialVersionUID = -1;
+
     private Long id;
 
     private Long taskId;
@@ -15,23 +21,70 @@ public class TaskInfo {
 
     private String desc;
 
+    private String type;
+
     private String status;
 
     private String isFinished;
 
-    private Date deadTime;
+    private String deadTime;
 
     private String isOvertime;
 
     private String isDelete;
 
-    private String updateUser;
+    private Long updateUser;
 
     private Date updateTime;
 
     private List<User> userList;
 
     private String isAdmin;
+
+    private List<TaskContent> taskContentList;
+
+    private List<TaskComment> taskCommentList;
+
+    private String progress;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<TaskComment> getTaskCommentList() {
+        return taskCommentList;
+    }
+
+    public void setTaskCommentList(List<TaskComment> taskCommentList) {
+        this.taskCommentList = taskCommentList;
+    }
+
+    public String getProgress() {
+        return progress;
+    }
+
+    public List<TaskContent> getTaskContentList() {
+        return taskContentList;
+    }
+
+    public void setTaskContentList(List<TaskContent> taskContentList) {
+        this.taskContentList = taskContentList;
+        if (taskContentList==null||taskContentList.size()==0){
+            return;
+        }
+        int finished = 0;
+        for (TaskContent taskContent:
+             taskContentList) {
+            if ("1".equals(taskContent.getIsFinished())){
+                finished++;
+            }
+        }
+        this.progress = Integer.valueOf(finished * 100 / taskContentList.size()).toString()+"%";
+    }
 
     public String getIsAdmin() {
         return isAdmin;
@@ -47,6 +100,10 @@ public class TaskInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIsOvertime() {
+        return isOvertime;
     }
 
     @Override
@@ -114,13 +171,20 @@ public class TaskInfo {
         this.isFinished = isFinished == null ? null : isFinished.trim();
     }
 
-    public Date getDeadTime() {
+    public String getDeadTime() {
         return deadTime;
     }
 
-    public void setDeadTime(Date deadTime) {
+    public void setDeadTime(String deadTime) {
         this.deadTime = deadTime;
-        if (deadTime.getTime()>System.currentTimeMillis()){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(deadTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date.getTime()>System.currentTimeMillis()){
             this.isOvertime = "0";
         }else {
             this.isOvertime = "1";
@@ -135,12 +199,12 @@ public class TaskInfo {
         this.isDelete = isDelete == null ? null : isDelete.trim();
     }
 
-    public String getUpdateUser() {
+    public Long getUpdateUser() {
         return updateUser;
     }
 
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
+    public void setUpdateUser(Long updateUser) {
+        this.updateUser = updateUser;
     }
 
     public Date getUpdateTime() {

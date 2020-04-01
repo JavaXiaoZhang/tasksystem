@@ -1,10 +1,14 @@
 package com.zq.commons.pojo;
 
+import java.io.Serializable;
+
 /**
  * Created by XiaoZhang on 2020/2/9 14:58
  */
 
-public class ResultBean<T> {
+public class ResultBean<T> implements Serializable {
+
+    private static final long serialVersionUID = -8587424918357775227L;
     private String statusCode;
     private T data;
 
@@ -22,6 +26,9 @@ public class ResultBean<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public ResultBean() {
     }
 
     @Override

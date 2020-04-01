@@ -123,7 +123,7 @@
     update t_task set is_delete = '1', update_user = #{userId}, update_time = now() where id=#{taskId}
   </update>
   <insert id="insertTaskWithReturn" useGeneratedKeys="true" keyProperty="id">
-    insert into t_task (`name`, `desc`, type, update_user, group_id)
+    insert into t_task (`name`, `desc`, `type`, update_user, group_id)
     values (#{name}, #{desc}, #{type}, #{updateUser}, #{groupId})
   </insert>
   <insert id="insertRelation">

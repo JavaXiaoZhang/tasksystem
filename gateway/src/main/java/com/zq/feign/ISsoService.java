@@ -4,8 +4,7 @@ import com.zq.commons.constant.ResultBeanConstant;
 import com.zq.commons.pojo.ResultBean;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author ZQ
@@ -17,10 +16,10 @@ public interface ISsoService {
      * sso模块的验证用户登录接口
      * @param jwtToken
      * @param addr
-     * @return
+     * @return  @RequestMapping(value = "sso/checkIsLogin", method = RequestMethod.GET)
      */
-    @GetMapping("sso/checkIsLogin")
-    public ResultBean checkIsLogin(@RequestParam("jwtToken") String jwtToken, @RequestParam("addr") String addr);
+    @GetMapping("sso/checkIsLogin/{jwtToken}/{addr}")
+    ResultBean checkIsLogin(@PathVariable("jwtToken") String jwtToken, @PathVariable("addr") String addr);
 
     @Component
     class ISsoServiceFallBack implements ISsoService{

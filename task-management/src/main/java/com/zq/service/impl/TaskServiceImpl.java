@@ -22,7 +22,7 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements ITaskServi
     @Autowired
     private TaskMapper taskMapper;
 
-    private Map<String, Task> map = new ConcurrentHashMap<>();
+//    private Map<String, Task> map = new ConcurrentHashMap<>();
 
     @Override
     public IBaseDao<Task> getBaseDao() {
@@ -41,16 +41,16 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements ITaskServi
 
     @Override
     public Long insertTaskWithReturn(Task task) {
-        //插入个人任务并返回主键
+        //插入任务并返回主键
         taskMapper.insertTaskWithReturn(task);
         //将任务id与userId绑定
         Long taskId = task.getId();
         Long userId = task.getUpdateUser();
         taskMapper.insertRelation(userId, taskId);
         //将对象存入ConcurrentHashMap
-        String key = "task:" + userId + ":" + task.getGroupId();
-        task.setId(taskId);
-        map.put(key,task);
+//        String key = "task:" + userId + ":" + task.getGroupId();
+//        task.setId(taskId);
+//        map.put(key,task);
 
         return taskId;
     }
@@ -60,13 +60,13 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements ITaskServi
         return taskMapper.queryGroupTaskByGroupId(id);
     }
 
-    @Override
-    public Task queryGroupTask(Long userId, Long groupId) {
-        String key = "task:" + userId+":"+groupId;
-        Task task;
-        do {
-            task = map.get(key);
-        }while (task==null);
-        return task;
-    }
+//    @Override
+//    public Task queryGroupTask(Long userId, Long groupId) {
+//        String key = "task:" + userId+":"+groupId;
+//        Task task;
+//        do {
+//            task = map.get(key);
+//        }while (task==null);
+//        return task;
+//    }
 }

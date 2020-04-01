@@ -37,10 +37,7 @@ public class GroupServiceImpl extends BaseServiceImpl<Group> implements IGroupSe
 
     @Override
     public List<Group> queryGroupByUserId(Long userId) {
-        List<Group> groupList = groupMapper.queryGroupByUserId(userId);
-        String key = "groupList:" + userId;
-        redisTemplate.opsForValue().set(key, groupList);
-        return groupList;
+        return groupMapper.queryGroupByUserId(userId);
     }
 
     @Override
@@ -56,8 +53,7 @@ public class GroupServiceImpl extends BaseServiceImpl<Group> implements IGroupSe
 
     @Override
     public Group queryGroupInfoByGroupId(Long groupId, Long userId) {
-        String key = "groupList:" + userId;
-        List<Group> groupList = (List<Group>) redisTemplate.opsForValue().get(key);
+        List<Group> groupList = queryGroupByUserId(userId);
         Group groupInfo = null;
         for (Group group : groupList) {
             if (groupId.longValue() == group.getId().longValue()) {
@@ -72,7 +68,6 @@ public class GroupServiceImpl extends BaseServiceImpl<Group> implements IGroupSe
 
     @Override
     public void deleteGroup(Long userId, Long groupId) {
-        //TODO 删除task里的taskContent和taskComment
         //taskMapper.deleteTaskByGroupId(groupId, userId);
         groupMapper.deleteGroup(userId, groupId);
     }
@@ -92,7 +87,11 @@ public class GroupServiceImpl extends BaseServiceImpl<Group> implements IGroupSe
         if (id != null){
             groupMapper.updateGroupUser(id);
         }else{
-            groupMapper.addGroupUser(groupId, username, updateUser);
+            User user = userMapper.selectByUsername(username);
+            if (user==null){
+                return;
+            }
+            groupMapper.addGroupUser(groupId, user.getId(), updateUser);
         }
     }
 
@@ -104,5 +103,10 @@ public class GroupServiceImpl extends BaseServiceImpl<Group> implements IGroupSe
     @Override
     public void delUserById(Long groupId, Long userId, Long updateUser) {
         groupMapper.delUserById(groupId, userId, updateUser);
+    }
+
+    @Override
+    public Long queryGroupIdByTaskId(Long taskId) {
+        return groupMapper.queryGroupIdByTaskId(taskId);
     }
 }

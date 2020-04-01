@@ -24,4 +24,20 @@ public interface ISsoService extends IBaseService<User> {
      * @return
      */
     ResultBean checkIsLogin(String jwtToken);
+
+    /**
+     * 根据userId获取同组userId
+     * @param groupId
+     * @return
+     */
+    List<Long> getGroupUserIds(Long groupId);
+
+    /**
+     * 根据userId获取userName
+     * @param userId
+     * @return
+     */
+    ResultBean getUsername(Long userId);
+
+    ResultBean getUserId(String username);
 }

@@ -71,4 +71,6 @@ public interface IGroupService extends IBaseService<Group> {
      * @param updateUser
      */
     void delUserById(Long groupId, Long userId, Long updateUser);
+
+    Long queryGroupIdByTaskId(Long taskId);
 }

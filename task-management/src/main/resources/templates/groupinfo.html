@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="modifyBtn" th:href="@{/task/modifyGroupName/{groupId}/(groupId=${group.id})}">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="modifyBtn" th:href="@{task/modifyGroupName/{groupId}/(groupId=${group.id})}">
                                     提交
                                 </button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -51,7 +51,7 @@
         <h3>
             团队成员
         </h3>
-        <button data-target="#modal-container-300833" role="button" class="btn btn-primary" data-toggle="modal" th:hidden="${group.isAdmin=='0'?true:false}">新增成员</button>
+        <button id="myModal" role="button" class="btn btn-primary" data-toggle="modal" th:hidden="${group.isAdmin=='0'?true:false}">新增成员</button>
         <div class="modal" id="modal-container-300833" role="dialog" aria-labelledby="myModalLabel"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -73,7 +73,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addBtn" th:href="@{/task/addGroupUser/{groupId}/(groupId=${group.id})}">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addBtn" th:href="@{task/addGroupUser/{groupId}/(groupId=${group.id})}">
                             提交
                         </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -104,15 +104,15 @@
                 <td th:text="${user.username}"> </td>
                 <td th:text="${user.isAdmin}=='1'?'是':'否'"> </td>
                 <td>
-                    <button href="/task/modifyIsAdmin/" th:name="${user.id}" type="button" class="btn btn-primary adminBtn" th:hidden="${user.isAdmin=='1'?true:false}">成为管理员</button>
+                    <button href="task/modifyIsAdmin/" th:name="${user.id}" type="button" class="btn btn-primary adminBtn" th:hidden="${user.isAdmin=='1'?true:false}">成为管理员</button>
                 </td>
                 <td>
-                    <button href="/task/delUserById/" th:name="${user.id}" type="button" class="btn btn-secondary delUserBtn" th:hidden="${group.isAdmin=='0'?true:false}">删除</button>
+                    <button href="task/delUserById/" th:name="${user.id}" type="button" class="btn btn-secondary delUserBtn" th:hidden="${group.isAdmin=='0'?true:false}">删除</button>
                 </td>
             </tr>
             </tbody>
         </table>
-        <button id="delGroupBtn" th:href="@{/task/delGroup/{groupId}/(groupId=${group.id})}" type="button" class="btn btn-danger btn-md" th:hidden="${group.isAdmin=='0'?true:false}">
+        <button id="delGroupBtn" th:href="@{task/delGroup/{groupId}/(groupId=${group.id})}" type="button" class="btn btn-danger btn-md" th:hidden="${group.isAdmin=='0'?true:false}">
             删除任务组
         </button>
     </div>
@@ -121,6 +121,7 @@
 <script type="text/javascript">
     $(function () {
         let groupId = $("#groupId").val();
+        let groupName = $("#groupName").text();
         //修改团队名称
         $("#content").on('click','#modifyBtn',function () {
             //修改名称
@@ -131,11 +132,12 @@
                 url: $(this).attr("href")+newGroupName+"/"+userId,
                 method: 'PUT'
             });
-            $("body").removeClass('modal-open');
+            //$("body").removeClass('modal-open');
         });
 
         //添加团队成员
-        $("#content").on('click','#addBtn',function () {
+        $("#addBtn").on('click',function () {
+            console.log("点击一次")
             let username = $("#username").val();
             //持久化数据
             $.ajax({
@@ -143,12 +145,31 @@
                 method: 'POST',
                 async: false
             });
-            $("body").removeClass('modal-open');
-            $("#content").load("/task/queryGroupInfoByGroupId/"+groupId+"/"+userId);
+            //$("body").removeClass('modal-open');
+            //清除缓存，避免出现重复事件
+            $.ajax({cache: false})
+            $("#content").load("task/queryGroupInfoByGroupId/"+groupId+"/"+userId);
+            socket.send("{\"msgType\":5,\"data\":{\"groupId\":"+groupId+",\"username\":\""+username+"\",\"groupName\":\""+groupName+"\"}}");
         });
+        $('#myModal').on('click',function () {
+            $('#modal-container-300833').off('shown.bs.modal');
+            $('#modal-container-300833').off('hidden.bs.modal');
+            $("#modal-container-300833").modal('show');
+        })
+
+        /*$('#modal-container-300833').on('shown.bs.modal', function (e) {//赋值
+            console.log("去除绑定shown")
+            $('#addBtn').off('shown.bs.modal');//去除绑定
+        });*/
+        /*$('#modal-container-300833').on('hidden.bs.modal', function (e) {
+            console.log("去除绑定hidden")
+            //$('#addBtn').off('hidden.bs.modal');//去除绑定
+            $(this).removeData("modal");
+            $(this).off().on('hidden', 'hidden.bs.modal');
+        });*/
 
         //成为管理员
-        $("#content").on('click','.adminBtn',function () {
+        $(".adminBtn").on('click',function () {
             let modifyUserId = $(this).attr("name");
             //持久化数据
             $.ajax({
@@ -156,11 +177,14 @@
                 method: 'PUT',
                 async: false
             });
-            $("#content").load("/task/queryGroupInfoByGroupId/"+groupId+"/"+userId);
+            //清除缓存，避免出现重复事件
+            $.ajax({cache: false})
+            $("#content").load("task/queryGroupInfoByGroupId/"+groupId+"/"+userId);
+            socket.send("{\"msgType\":5,\"data\":{\"adminUserId\":"+modifyUserId+",\"groupName\":\""+groupName+"\"}}");
         });
 
         //删除用户
-        $("#content").on('click','.delUserBtn',function () {
+        $('.delUserBtn').on('click',function () {
             let delUserId = $(this).attr("name");
             //持久化数据
             $.ajax({
@@ -168,10 +192,13 @@
                 method: 'PUT',
                 async: false
             });
-            $("#content").load("/task/queryGroupInfoByGroupId/"+groupId+"/"+userId);
+            //清除缓存，避免出现重复事件
+            $.ajax({cache: false})
+            $("#content").load("task/queryGroupInfoByGroupId/"+groupId+"/"+userId);
+            socket.send("{\"msgType\":5,\"data\":{\"delUserId\":"+delUserId+",\"groupName\":\""+groupName+"\"}}");
         });
 
-        //任务组
+        //删除任务组
         $("#content").on('click','#delGroupBtn',function () {
             //持久化数据
             $.ajax({
@@ -179,7 +206,10 @@
                 method: 'PUT',
                 async: false
             });
-            $("#content").load("/task/querytask.html");
+            //清除缓存，避免出现重复事件
+            $.ajax({cache: false})
+            $("#content").load("querytask.html");
+            socket.send("{\"msgType\":4,\"data\":{\"groupId\":"+groupId+",\"groupName\":\""+groupName+"\"}}");
         });
     })
 </script>
