@@ -231,7 +231,7 @@ public class TaskController {
     public String addUserToTaskInfo(@PathVariable Long taskInfoId, @PathVariable String username,
                                     @PathVariable Long updateUser, @PathVariable String isAdmin, @PathVariable Long taskId){
         taskInfoService.addUserToTaskInfo(taskInfoId, username, updateUser, taskId);
-        return "redirect:http://localhost:9081/task-management/http://localhost:9081/task-management/task/getTaskInfoById/"+taskInfoId+"/"+isAdmin+"/"+updateUser+"/"+taskId;
+        return "redirect:http://localhost:9081/task-management/task/getTaskInfoById/"+taskInfoId+"/"+isAdmin+"/"+updateUser+"/"+taskId;
     }
 
     @PutMapping("modifyDeadtime/{taskInfoId}/{deadTime}/{updateUser}/{isAdmin}/{taskId}")

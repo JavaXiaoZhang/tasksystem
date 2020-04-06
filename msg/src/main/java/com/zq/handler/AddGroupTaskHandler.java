@@ -46,7 +46,7 @@ public class AddGroupTaskHandler extends SimpleChannelInboundHandler<Message> {
     }*/
 
     @Override
-    protected void messageReceived(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
         //发送信息的channel
         Channel channel = channelHandlerContext.channel();
         //发送的信息

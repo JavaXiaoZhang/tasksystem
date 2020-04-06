@@ -1,0 +1,7 @@
+#Rocketmq配置
+rocketmq:
+  name-server: 192.168.33.10:9876
+  producer:
+    group: pp
+#  application:
+#    name: rocket

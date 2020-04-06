@@ -45,5 +45,6 @@ public class RemindTask {
                 log.info(o+"将在一天内过期！");
             }
         }
+        //redisTemplate.opsForZSet().rangeByScore(key,"-inf",Double.valueOf(format1));
     }
 }

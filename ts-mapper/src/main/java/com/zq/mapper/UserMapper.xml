@@ -96,7 +96,7 @@
   </select>
   <select id="queryUserListByTaskInfoId" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select u.id, u.username from t_user u join t_user_taskinfo uk on u.id = uk.user_id
-            where uk.taskinfo_id= #{taskId} and u.is_delete='0' and uk.is_delete='0'
+            where uk.taskinfo_id= #{taskInfoId} and u.is_delete='0' and uk.is_delete='0'
   </select>
   <select id="getGroupUserIds" parameterType="java.lang.Long" resultType="java.lang.Long">
     select u.id from t_user u join t_user_group ug on u.id = ug.user_id

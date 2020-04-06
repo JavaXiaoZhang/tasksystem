@@ -36,8 +36,6 @@ public class AuthFilter implements GlobalFilter, Ordered {
     @Autowired
     private ISsoService ssoService;
 
-
-
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         //1.ServerWebExchange相当于当前请求和响应的上下文，通过它可以获取到request和response对象
@@ -46,7 +44,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
         ServerHttpResponse response = exchange.getResponse();
         //3.判断用户是否访问的为登录或注册路径，如果是则放行
         String path = request.getURI().getPath();
-        if (path.contains("/sso/checkLogin")||path.contains("/register/register")||path.contains("sso/index.html")||
+        if (path.contains("/sso/checkLogin")||path.contains("/register/register")||path.contains("sso/index.html")||path.contains("register/register.html")||
                 path.contains("js")||path.contains("css")||path.contains("logo")){
             return chain.filter(exchange);
         }

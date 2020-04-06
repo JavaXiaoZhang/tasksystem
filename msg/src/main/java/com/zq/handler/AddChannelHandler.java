@@ -28,7 +28,7 @@ public class AddChannelHandler extends SimpleChannelInboundHandler<TextWebSocket
     private ChannelUtil channelUtil;
 
     @Override
-    protected void messageReceived(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame textWebSocketFrame) throws Exception {
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame textWebSocketFrame) throws Exception {
         Channel channel = channelHandlerContext.channel();
         String text = textWebSocketFrame.text();
         ObjectMapper objectMapper = new ObjectMapper();

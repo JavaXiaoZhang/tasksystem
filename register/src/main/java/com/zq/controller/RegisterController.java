@@ -23,6 +23,11 @@ public class RegisterController {
     @Autowired
     private IRegisterService registerService;
 
+    @GetMapping("register.html")
+    public String registerHtml(){
+        return "index";
+    }
+
     @PostMapping("register")
     public String register(User user, ModelMap modelMap) {
         //检查用户名是否存在

@@ -19,7 +19,7 @@ public class HeartHandler extends SimpleChannelInboundHandler<Message> {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    protected void messageReceived(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
         /* String text = msg.text();
         ObjectMapper objectMapper = new ObjectMapper();
         Message message = objectMapper.readValue(text, Message.class);*/

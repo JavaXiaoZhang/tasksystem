@@ -388,12 +388,12 @@
         $(".moveCard").click(function () {
             let status = $(this).text();
             $.ajax({
-                'url': 'task/modifyStatus/' + taskInfoId + "/" + status + "/" + userId + "/" + taskId,
-                'method': 'PUT',
-                success: function () {
-                    $('#taskSystem').load('task/queryTaskInfoById/'+taskId+'/'+isAdmin+'/'+userId);
-                }
+                url: 'task/modifyStatus/' + taskInfoId + "/" + status + "/" + userId + "/" + taskId,
+                method: 'PUT',
+                async: false
             })
+            $(".modal-backdrop").remove();
+            $('#taskSystem').load('task/queryTaskInfoById/'+taskId+'/'+isAdmin+'/'+userId);
             //socket.send("{\"msgType\":3,\"data\":"+groupId+"}");
             return false;
         })

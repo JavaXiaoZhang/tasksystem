@@ -62,10 +62,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
         String key = new StringBuilder("taskId:").append(taskId).toString();
         List<TaskInfo> taskInfoList = (List<TaskInfo>) redisTemplate.opsForValue().get(key);
 
-        Boolean isGetLock;
-        do {
-            isGetLock = getTaskLock(userId, taskId);
-        }while (isGetLock!=true);
+        getTaskLock(userId, taskId);
 
         taskInfoMapper.insertSelective(taskInfo);
         log.info("taskInfoId:{}",taskInfo.getId());
@@ -147,10 +144,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
         if (user == null) {
             return;
         }
-        Boolean isGetLock;
-        do {
-            isGetLock = getTaskInfoLock(updateUser, taskInfoId);
-        }while (isGetLock!=true);
+        getTaskInfoLock(updateUser, taskInfoId);
         //持久化数据
         taskInfoMapper.addUserToTaskInfo(taskInfoId, user.getId(), updateUser);
         //将user对象添加到缓存中
@@ -165,6 +159,21 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
         modifyTaskInfoList(taskId, taskInfo);
 
         releaseTaskInfoLock(updateUser, taskInfoId);
+    }
+
+    //获取分布式锁
+    private void getTaskInfoLock(Long updateUser, Long taskInfoId) {
+        String lock = new StringBuilder("TaskInfoLock:").append(taskInfoId).toString();
+        //设置超时时间，避免死锁
+        Boolean absent = redisTemplate.opsForValue().setIfAbsent(lock, updateUser, 2, TimeUnit.SECONDS);
+        while (!absent){
+            try {
+                Thread.sleep(100);  //睡眠100ms后，再尝试获取
+                absent = redisTemplate.opsForValue().setIfAbsent(lock, updateUser, 2, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     //释放分布式锁
@@ -186,17 +195,18 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
         }
     }
 
-    //获取分布式锁
-    private Boolean getTaskInfoLock(Long updateUser, Long taskInfoId) {
-        String lock = new StringBuilder("TaskInfoLock:").append(taskInfoId).toString();
-        //设置超时时间，避免死锁
-        return redisTemplate.opsForValue().setIfAbsent(lock, updateUser, 3, TimeUnit.SECONDS);
-    }
-
-    private Boolean getTaskLock(Long updateUser, Long taskId) {
+    private void getTaskLock(Long updateUser, Long taskId) {
         String lock = new StringBuilder("TaskLock:").append(taskId).toString();
         //设置超时时间，避免死锁
-        return redisTemplate.opsForValue().setIfAbsent(lock, updateUser, 3, TimeUnit.SECONDS);
+        Boolean absent = redisTemplate.opsForValue().setIfAbsent(lock, updateUser, 2, TimeUnit.SECONDS);
+        while (!absent){
+            try {
+                Thread.sleep(100);  //睡眠100ms后，再尝试获取
+                absent = redisTemplate.opsForValue().setIfAbsent(lock, updateUser, 2, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -219,10 +229,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
         TaskInfo taskInfo = getTaskInfo(taskId, taskInfoId);
         taskInfo.setDeadTime(deadTime);
 
-        Boolean isGetLock;
-        do {
-            isGetLock = getTaskInfoLock(updateUser, taskInfoId);
-        }while (isGetLock!=true);
+        getTaskInfoLock(updateUser, taskInfoId);
 
         taskInfoMapper.updateByPrimaryKeySelective(taskInfo);
         modifyTaskInfoList(taskId, taskInfo);
@@ -236,10 +243,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
         isFinished = ("true".equals(isFinished)) ? "1" : "0";
         taskInfo.setIsFinished(isFinished);
 
-        Boolean isGetLock;
-        do {
-            isGetLock = getTaskInfoLock(updateUser, taskInfoId);
-        }while (isGetLock!=true);
+        getTaskInfoLock(updateUser, taskInfoId);
 
         taskInfoMapper.updateByPrimaryKeySelective(taskInfo);
         modifyTaskInfoList(taskId, taskInfo);
@@ -251,10 +255,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
     public void modifyContentIsFinished(Long taskContentId, Long taskInfoId, String isFinished, Long updateUser, Long taskId) {
         TaskInfo taskInfo = getTaskInfo(taskId, taskInfoId);
 
-        Boolean isGetLock;
-        do {
-            isGetLock = getTaskInfoLock(updateUser, taskInfoId);
-        }while (isGetLock!=true);
+        getTaskInfoLock(updateUser, taskInfoId);
 
         for (TaskContent taskContent : taskInfo.getTaskContentList()) {
             if (taskContentId.longValue() == taskContent.getId().longValue()) {
@@ -280,10 +281,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
         taskContent.setTaskInfoId(taskInfoId);
         taskContent.setUpdateUser(updateUser);
 
-        Boolean isGetLock;
-        do {
-            isGetLock = getTaskInfoLock(updateUser, taskInfoId);
-        }while (isGetLock!=true);
+        getTaskInfoLock(updateUser, taskInfoId);
 
         //返回主键
         taskContentMapper.insertSelective(taskContent);
@@ -317,10 +315,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
         String dateString = simpleDateFormat.format(date);
         taskComment.setUpdateTime(dateString);
 
-        Boolean isGetLock;
-        do {
-            isGetLock = getTaskInfoLock(updateUser, taskInfoId);
-        }while (isGetLock!=true);
+        getTaskInfoLock(updateUser, taskInfoId);
 
         //返回主键
         taskCommentMapper.insertSelective(taskComment);
@@ -341,10 +336,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
     public void modifyDesc(Long taskInfoId, String desc, Long updateUser, Long taskId) {
         TaskInfo taskInfo = getTaskInfo(taskId, taskInfoId);
         taskInfo.setDesc(desc);
-        Boolean isGetLock;
-        do {
-            isGetLock = getTaskInfoLock(updateUser, taskInfoId);
-        }while (isGetLock!=true);
+        getTaskInfoLock(updateUser, taskInfoId);
         //持久化数据
         taskInfoMapper.updateByPrimaryKeySelective(taskInfo);
         modifyTaskInfoList(taskId, taskInfo);
@@ -367,10 +359,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
             }
         }
 
-        Boolean isGetLock;
-        do {
-            isGetLock = getTaskInfoLock(updateUser, taskInfoId);
-        }while (isGetLock!=true);
+        getTaskInfoLock(updateUser, taskInfoId);
         //持久化数据
         taskContentMapper.deleteByPrimaryKey(taskContentId);
         modifyTaskInfoList(taskId, taskInfo);
@@ -393,10 +382,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
             }
         }
 
-        Boolean isGetLock;
-        do {
-            isGetLock = getTaskInfoLock(updateUser, taskInfoId);
-        }while (isGetLock!=true);
+        getTaskInfoLock(updateUser, taskInfoId);
         //持久化数据
         taskCommentMapper.deleteByPrimaryKey(taskCommentId);
         modifyTaskInfoList(taskId, taskInfo);
@@ -417,10 +403,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
             }
         }
 
-        Boolean isGetLock;
-        do {
-            isGetLock = getTaskLock(updateUser, taskId);
-        }while (isGetLock!=true);
+        getTaskLock(updateUser, taskId);
 
         taskInfoMapper.deleteByPrimaryKey(taskInfoId);
         redisTemplate.opsForValue().set(key, taskInfoList);
@@ -437,10 +420,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfo> implements IT
         taskInfo.setStatus(status);
 
 
-        Boolean isGetLock;
-        do {
-            isGetLock = getTaskLock(updateUser, taskId);
-        }while (isGetLock!=true);
+        getTaskLock(updateUser, taskId);
 
         taskInfoMapper.updateByPrimaryKeySelective(taskInfo);
         modifyTaskInfoList(taskId, taskInfo);

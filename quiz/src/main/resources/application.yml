@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: quiz
+  elasticsearch:
+    jest:
+      proxy:
+        port: 9200
+        host: 192.168.33.10
+server:
+  port: 9093

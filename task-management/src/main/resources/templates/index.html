@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>任务管理系统主页</title>
-     <!--bootstrap.min.css-->
+    <!--bootstrap.min.css-->
     <link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
 <body>
@@ -69,14 +69,17 @@
     </div>-->
 </div>
 <input hidden="hidden" id="userId" th:value="${userId}">
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/popper.min.js"></script>
+<script src="js/jquery-3.4.1.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
     const userId = $('#userId').val();
 
     $(function () {
         $("#taskSystem").load("tasksystem.html");
+
+        $(".my-sm-0").click(function () {
+            $("#taskSystem").load("http://localhost:9081/quiz/");
+        })
     })
 
     //判断当前浏览器是否支持websocket
